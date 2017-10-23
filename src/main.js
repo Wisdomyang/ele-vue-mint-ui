@@ -6,15 +6,25 @@ import MintUI from 'mint-ui'
 import Vuex from 'vuex'
 import VueRouter from 'vue-router'
 import axios from "axios"
+import VueAwesomeSwiper from 'vue-awesome-swiper'
 import {routes} from './router/routerConfig'
 import './assets/css/style'
 import './assets/css/animate'
+import './assets/css/swiper'
 //引入手淘适配
 import './assets/js/flexible'
 import './assets/js/flexible-css'
+// fastclick
+import FastClick from 'fastclick'
+if ('addEventListener' in document) {
+    document.addEventListener('DOMContentLoaded', function() {
+        FastClick.attach(document.body);
+    }, false);
+}
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
 Vue.use(MintUI)
+Vue.use(VueAwesomeSwiper)
 Vue.use(VueRouter)
 /* eslint-disable no-new */
 const router = new VueRouter({
