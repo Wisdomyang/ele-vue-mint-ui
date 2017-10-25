@@ -9,160 +9,30 @@
 		</mt-header>
 		<swiper :options="swiperOption" ref="mySwiper" class="home-swiper">
 		 <!-- slides -->
-			<swiper-slide class="swiper-item">
-				<div class="slide-div">
+			<swiper-slide class="swiper-item" v-for="item in swiperList">
+				<div class="slide-div" v-for="slideItem in item.goodList">
 					<div class="slide-img">
 						<div>
-							
+							<img :src="slideItem.images" alt="" />
 						</div>
 						
 					</div>
-					<p class="slide-p">甜品饮品</p>
-				</div>
-				<div class="slide-div">
-					<div class="slide-img">
-						<div>
-							
-						</div>
-						
-					</div>
-					<p class="slide-p">甜品饮品</p>
-				</div>
-				<div class="slide-div">
-					<div class="slide-img">
-						<div>
-							
-						</div>
-						
-					</div>
-					<p class="slide-p">甜品饮品</p>
-				</div>
-				<div class="slide-div">
-					<div class="slide-img">
-						<div>
-							
-						</div>
-						
-					</div>
-					<p class="slide-p">甜品饮品</p>
-				</div>
-				<div class="slide-div">
-					<div class="slide-img">
-						<div>
-							
-						</div>
-						
-					</div>
-					<p class="slide-p">甜品饮品</p>
-				</div>
-				<div class="slide-div">
-					<div class="slide-img">
-						<div>
-							
-						</div>
-						
-					</div>
-					<p class="slide-p">甜品饮品</p>
-				</div>
-				<div class="slide-div">
-					<div class="slide-img">
-						<div>
-							
-						</div>
-						
-					</div>
-					<p class="slide-p">甜品饮品</p>
-				</div>
-				<div class="slide-div">
-					<div class="slide-img">
-						<div>
-							
-						</div>
-						
-					</div>
-					<p class="slide-p">甜品饮品</p>
-				</div>
-				
-			</swiper-slide>
-			<swiper-slide class="swiper-item">
-				<div class="slide-div">
-					<div class="slide-img">
-						<div>
-							
-						</div>
-						
-					</div>
-					<p class="slide-p">肯德基</p>
-				</div>
-				<div class="slide-div">
-					<div class="slide-img">
-						<div>
-							
-						</div>
-						
-					</div>
-					<p class="slide-p">肯德基</p>
-				</div>
-				<div class="slide-div">
-					<div class="slide-img">
-						<div>
-							
-						</div>
-						
-					</div>
-					<p class="slide-p">肯德基</p>
-				</div>
-				<div class="slide-div">
-					<div class="slide-img">
-						<div>
-							
-						</div>
-						
-					</div>
-					<p class="slide-p">肯德基</p>
-				</div>
-				<div class="slide-div">
-					<div class="slide-img">
-						<div>
-							
-						</div>
-						
-					</div>
-					<p class="slide-p">肯德基</p>
-				</div>
-				<div class="slide-div">
-					<div class="slide-img">
-						<div>
-							
-						</div>
-						
-					</div>
-					<p class="slide-p">肯德基</p>
-				</div>
-				<div class="slide-div">
-					<div class="slide-img">
-						<div>
-							
-						</div>
-						
-					</div>
-					<p class="slide-p">肯德基</p>
-				</div>
-				<div class="slide-div">
-					<div class="slide-img">
-						<div>
-							
-						</div>
-						
-					</div>
-					<p class="slide-p">肯德基</p>
+					<p class="slide-p">{{slideItem.name}}</p>
 				</div>
 			</swiper-slide>
+			
 			
 			<!-- Optional controls -->
 			<div class="swiper-pagination"  slot="pagination"></div>
 		</swiper>
-		<div></div>
+		<div class="content-container">
+			<div class="nearSell">
+				<div>
+					
+				</div>
+				<p>附近商家</p>
+			</div>
+		</div>
 	
 	</div>
 </template>
@@ -170,10 +40,13 @@
 <script>
 import { Button,MessageBox,Toast,Indicator,Header } from 'mint-ui';
 import {swiper , swiperSlide} from 'vue-awesome-swiper';
+import {ajax} from "../../assets/js/ajax";
+import {data} from "../../mock";
 export default {
 	data () {
 		return {
 			title: '深圳',
+			swiperList: [],
 			swiperOption: {
 		       // NotNextTick is a component's own property, and if notNextTick is set to true, the component will not instantiate the swiper through NextTick, which means you can get the swiper object the first time (if you need to use the get swiper object to do what Things, then this property must be true)
 		       // notNextTick是一个组件自有属性，如果notNextTick设置为true，组件则不会通过NextTick来实例化swiper，也就意味着你可以在第一时间获取到swiper对象，假如你需要刚加载遍使用获取swiper对象来做什么事，那么这个属性一定要是true
@@ -205,6 +78,13 @@ export default {
 		       // ...
 		    }
 		}
+	},
+	mounted (){
+		let _self = this;
+		ajax.get('swiperList').then(res => {
+			_self.swiperList = res.data.swiperItem;
+			console.log(_self.swiperList)
+		})
 	}
 }
 </script>
@@ -244,6 +124,7 @@ export default {
 		width: 100%;
 		height: 4.21333rem;
 		border-bottom: 1px solid #e4e4e4;
+		margin-bottom: 0.22666rem;
 	}
 	.swiper-item{
 		font-size: 0;
@@ -259,10 +140,12 @@ export default {
 				justify-content: center;
 				align-items: center;
 				div{
-					width: 0.36rem;
-					height: 0.4rem;
-					background: url(../../assets/images/search.png) no-repeat;
-					background-size: 100% 100%;
+					width: 0.98666rem;
+					height: 0.74666rem;
+					img{
+						width: 100%;
+						height: 0.74666rem;
+					}
 				}
 			}
 			.slide-p{
@@ -271,6 +154,31 @@ export default {
 				display: flex;
 				justify-content: center;
 				align-items: center;
+			}
+		}
+	}
+	.content-container{
+		width: 100%;
+		height: auto;
+		padding-top: 0.22666rem;
+		border-top: 1px solid #e4e4e4;
+		.nearSell{
+			width: 100%;
+			margin-bottom: 0.32rem;
+			padding-left: 3.46667%;
+			font-size: 0;
+			>div{
+				display: inline-block;
+				width: 0.32rem;
+				height: 0.33333rem;
+				background: url(../../assets/images/celllogo_03.png) no-repeat;
+				background-size: 100% 100%;
+			}
+			>p{
+				display: inline-block;
+				font-size: 0.28rem;
+				color: #999999;
+				margin-left: 1.73333%;
 			}
 		}
 	}
