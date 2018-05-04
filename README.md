@@ -1,6 +1,6 @@
-# vuetest
+# ele-project
 
-> myproject
+> vue-mint-ui
 
 ## Build Setup
 
