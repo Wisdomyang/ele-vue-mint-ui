@@ -10,7 +10,7 @@
     </mt-header>
     <mt-tabbar v-model="tabbarSelected" fixed v-show="$route.meta.hasTabbar">
       <mt-tab-item :id="item.id" v-for="item in tabs" :key="item.id">
-        <i class="iconfont" slot="icon" v-html="item.icon" :class="{tab_active: tabbarSelected == item.id}" @click="tabSelected(item)"></i><span @click="tabSelected(item)" :class="{tab_active: tabbarSelected == item.id}">{{item.name}}</span>
+        <i class="iconfont" slot="icon" style="font-size: 20px" v-html="item.icon" :class="{tab_active: tabbarSelected == item.id}" @click="tabSelected(item)"></i><span @click="tabSelected(item)" :class="{tab_active: tabbarSelected == item.id}">{{item.name}}</span>
       </mt-tab-item>
     </mt-tabbar>
   </div>
@@ -50,7 +50,7 @@ export default {
     }
   },
   mounted () {
-    console.log(this.$route)
+   
   }
 }
 </script>
@@ -75,6 +75,8 @@ export default {
 .mint-header-title{
   font-size: 16px;
 }
+
+
 
 .child-view {
   width:100%;
