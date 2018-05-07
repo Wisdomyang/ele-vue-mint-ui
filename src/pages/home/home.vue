@@ -28,21 +28,25 @@
 					<div class="img_box"></div>
 					<div class="content">
 						<div class="top">
-							<div class="badge"></div>
-							<div class="title"></div>
-							<div class="mark"></div>
+							<div class="badge">品牌</div>
+							<div class="title ellipsis">韩国炸鸡的刷卡缴费开始的咖啡机水电费看见是看得见反倒是科技</div>
+							<ul class="mark">
+								<li>准</li>
+								<li>保</li>
+							</ul>
 						</div>
 						<div class="center">
-							<div class="score"></div>
-							<div class="monthly-sales"></div>
-							<div>
-								<span>蜂鸟转送</span>
-								<span>必答</span>
-							</div>
+							<div class="score">123</div>
+							<div class="score_num">4.2</div>
+							<div class="monthly_sales">月售669单</div>
+							<ul class="center_mark">
+								<li>蜂鸟转送</li>
+								<li>必答</li>
+							</ul>
 						</div>
 						<div class="bottom">
-							<div class="deliveryfee"></div>
-							<div class="distance"></div>
+							<div class="deliveryfee">￥20元起售<span>/</span>配送费￥3</div>
+							<div class="distance">1.87.km<span>/</span>59分钟</div>
 						</div>
 					</div>
 				</li>
@@ -88,76 +92,8 @@ export default {
 </style>
 
 <style lang="scss" scoped>
-@import '../../assets/css/mixin.scss';
-.header{
-	-webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    background-color: $blue;
-    box-sizing: border-box;
-    color: #fff;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    height: 40px;
-    line-height: 1;
-    padding: 0 10px;
-    position: relative;
-    text-align: center;
-    white-space: nowrap;
-	justify-content: center;
-	font-size: 16px;
-	.iconfont,span{
-		color: $fc;
-	}
-}
-.home_swiper{
-	width: 100%;
-	height: 3.43rem;
-	border-bottom: 1px solid $bc;
-	margin-bottom: 0.18rem;
-	background-color: $fc;
-	.category_container{
-		padding: .14rem 0;
-		width: 25%;
-		height: 1.46rem;
-		float: left;
-		display: flex;
-		justify-content: space-between;
-		flex-direction: column;
-		align-items: center;
-		.img_box{
-			width: .68rem;
-			height: .68rem;
-			img{
-				width: 100%;
-				height: 100%;
-			}
-		}
-		.text{
-			width: 100%;
-			text-align: center;
-			@include sc(.24rem,'#787878')
-		}
-		
-	}
-	
-}
-
-.nearly_seller{
-	width: 100%;
-	border-top: 1px solid $bc;
-	background-color: $fc;
-	.section_title{
-		@include wh(100%,.72rem);
-		display: flex;
-		align-items: center;
-		@include sc(.24rem,'#787878');
-		i{
-			margin: 0 0.13rem 0 0.27rem;
-		}
-	}
-}
+@import '../../assets/css/mixin';
+@import './home';
 
 
 
