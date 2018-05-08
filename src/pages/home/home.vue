@@ -1,6 +1,57 @@
 <template>
 	<div class="home">
-		
+		<section class="header">
+			<router-link tag="div" :to="{path: 'chooseAddress'}">
+				<i class="iconfont">&#xe61e;</i>
+				<span>深圳</span>
+			</router-link>
+		</section>
+		<mt-swipe class="home_swiper">
+			<mt-swipe-item v-for="category in categoryList">
+				<div class="category_container" v-for="item in category.goodList" :key="item.id">
+					<div class="img_box">
+						<img :src="item.images" :alt="item.name">
+					</div>
+					<div class="text">
+						{{item.name}}
+					</div>
+				</div>
+			</mt-swipe-item>
+		</mt-swipe>
+		<section class="nearly_seller">
+			<div class="section_title">
+				<i class="iconfont">&#xe647;</i>
+				<span>附近商家</span>
+			</div>
+			<ul class="section_content">
+				<li>
+					<div class="li_img_box"></div>
+					<div class="li_content">
+						<div class="top">
+							<div class="badge">品牌</div>
+							<div class="title ellipsis">韩国炸鸡的刷卡缴费开始的咖啡机水电费看见是看得见反倒是科技</div>
+							<ul>
+								<li>准</li>
+								<li>保</li>
+							</ul>
+						</div>
+						<div class="center">
+							<div class="score">123</div>
+							<div class="score_num">4.2</div>
+							<div class="monthly_sales">月售669单</div>
+							<ul>
+								<li>蜂鸟转送</li>
+								<li>必答</li>
+							</ul>
+						</div>
+						<div class="bottom">
+							<div class="deliveryfee">￥20元起售<span>/</span>配送费￥3</div>
+							<div class="distance">1.87.km<span>/</span>59分钟</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+		</section>
 	</div>
 </template>
 
@@ -12,114 +63,36 @@ export default {
 	data () {
 		return {
 			title: '深圳',
-			swiperList: []
+			categoryList: []
 			
 		}
 	},
+	methods: {
+		
+	},
 	mounted (){
 		
+		ajax.get('swiperList').then(res => {
+			
+			this.categoryList = res.data.swiperItem;
+		})
+		
 
-		// let _self = this;
-		// ajax.get('swiperList').then(res => {
-		// 	// _self.swiperList = res.data.swiperItem;
-		// 	console.log(_self.swiperList)
-		// })
+		
 	}
 }
 </script>
 
 <style type="text/css">
-.mint-header-title{
-	font-size: .3rem;
-}
 
+.mint-swipe-indicator.is-active{
+	background: #26a2ff;
+	opacity: 1;
+}
 </style>
 
 <style lang="scss" scoped>
-.home{
-	.header-search{
-		width: 0.27rem;
-		height: 0.3rem;
-		margin-left: 0.23rem;
-		background: url(../../assets/images/search.png) no-repeat;
-		background-size: 100% 100%;
-	}
-	.header-ul{
-		font-size: 0;
-		margin-right: 0.13rem;
-		li{
-			font-size: 0.24rem;
-			display: inline-block;
-			padding: 0 0.1rem;
-			&:last-child{
-				border-left: 1px solid #fff;
-			}
-			
-		}
-	}
-	.home-swiper{
-		width: 100%;
-		height: 3.16rem;
-		border-bottom: 1px solid #e4e4e4;
-		margin-bottom: 0.17rem;
-	}
-	.swiper-item{
-		font-size: 0;
-		.slide-div{
-			display: inline-block;
-			font-size: 0.22rem;
-			width: 25%;
-			height: 1.38rem;
-			.slide-img{
-				width: 100%;
-				height: 1.14rem;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-				div{
-					width: 0.98666rem;
-					height: 0.74666rem;
-					img{
-						width: 100%;
-						height: 0.74666rem;
-					}
-				}
-			}
-			.slide-p{
-				width: 100%;
-				height: 0.32rem;
-				display: flex;
-				justify-content: center;
-				align-items: center;
-			}
-		}
-	}
-	.content-container{
-		width: 100%;
-		height: auto;
-		padding-top: 0.22666rem;
-		border-top: 1px solid #e4e4e4;
-		.nearSell{
-			width: 100%;
-			margin-bottom: 0.32rem;
-			padding-left: 3.46667%;
-			font-size: 0;
-			>div{
-				display: inline-block;
-				width: 0.32rem;
-				height: 0.33333rem;
-				background: url(../../assets/images/celllogo_03.png) no-repeat;
-				background-size: 100% 100%;
-			}
-			>p{
-				display: inline-block;
-				font-size: 0.28rem;
-				color: #999999;
-				margin-left: 1.73333%;
-			}
-		}
-	}
-	
-}
+@import '../../assets/css/mixin';
+@import './home';
 
 </style>

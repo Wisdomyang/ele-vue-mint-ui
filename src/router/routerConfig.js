@@ -4,26 +4,13 @@ const home = resolve =>{
     resolve(require('../pages/home/home'))
   })  
 }
-//const pinglun = resolve =>{
-//	require.ensure(['../views/pinglun'], () => {
-//  resolve(require('../views/pinglun'))
-//})  
-//}
-//const scroll = resolve =>{
-//	require.ensure(['../views/scroll'], () => {
-//  resolve(require('../views/scroll'))
-//})  
-//}
-//const swiper = resolve =>{
-//	require.ensure(['../views/swiper'], () => {
-//  resolve(require('../views/swiper'))
-//})  
-//}
-//const parallax = resolve =>{
-//	require.ensure(['../views/parallax'], () => {
-//  resolve(require('../views/parallax'))
-//})  
-//}
+
+const chooseAddress = resolve =>{
+	require.ensure(['../pages/address/choose-address/choose-address'], () => {
+    resolve(require('../pages/address/choose-address/choose-address'))
+  })  
+}
+
 export const routes = [
 	{
 		path: '/', 
@@ -32,38 +19,25 @@ export const routes = [
     	//路由元信息  可以将自己定义的一些属性写入， 以便于在路由钩子中判断     
     	meta: {
      	 	path: 'home',
-      		title:'elm',
-      		
+      	title:'首页',
+				hasHeader: false,
+				hasTabbar: true
     	}
 	},
-//	{
-//		path: '/pinglun', 
-//	    name: 'pinglun',
-//	    component: pinglun
-//	},
-//	{
-//		path: '/swiper', 
-//	    name: 'swiper',
-//	    component: swiper
-//	},
-//	{
-//		path: '/parallax', 
-//	    name: 'parallax',
-//	    component: parallax
-//	},
-//	{
-//		path: '/scroll', 
-//  	name: 'scroll',   // 用于router.push()
-//  	component: scroll,
-//  	//路由元信息  可以将自己定义的一些属性写入， 以便于在路由钩子中判断     
-//  	meta: {
-//   	 	path: 'scroll',
-//    		title:'旺管家商城',
-//    		
-//  	}
-//	}
 	{
-      path: '*', 
-      redirect: '/' 
-    }
+		path: '/chooseAddress', 
+		name: 'chooseAddress',   // 用于router.push()
+		component: chooseAddress,
+		//路由元信息  可以将自己定义的一些属性写入， 以便于在路由钩子中判断     
+		meta: {
+			path: 'chooseAddress',
+			title:'选择收获地址',
+			hasHeader: true,
+			hasTabbar: false
+		}
+	},
+	{
+		path: '*', 
+		redirect: '/' 
+	}
 ]

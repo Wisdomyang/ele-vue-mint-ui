@@ -9,6 +9,7 @@ import {routes} from './router/routerConfig'
 import './assets/css/common'
 import './assets/css/style'
 import './assets/css/animate'
+import './assets/iconfont/iconfont.css'
 import './config/rem'
 Vue.config.productionTip = false
 Vue.use(MintUI)
