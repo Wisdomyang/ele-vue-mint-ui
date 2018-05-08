@@ -6,7 +6,7 @@
     </transition>
     
     <mt-header :title="title" fixed v-show="$route.meta.hasHeader">
-      <i class="iconfont" slot="left">&#xe682;</i>
+      <i class="iconfont" style="color: #fff" slot="left" @click="goback()">&#xe682;</i>
     </mt-header>
     <mt-tabbar v-model="tabbarSelected" fixed v-show="$route.meta.hasTabbar">
       <mt-tab-item :id="item.id" v-for="item in tabs" :key="item.id">
@@ -21,7 +21,7 @@ export default {
   name: 'app',
   data (){
     return {
-      title: '1234',
+      title: '',
       routerTrans: 'slide-left',
       tabbarSelected: 0,
       tabs: [{
@@ -47,6 +47,16 @@ export default {
   methods: {
     tabSelected(item){
       item.path && this.$router.push(item.path)
+    },
+    goback(){
+      window.history.go(-1);
+    }
+  },
+
+  watch: {
+    $route(to,from){
+      this.title = to.meta.title;
+      document.title = to.meta.title;
     }
   },
   mounted () {
@@ -74,6 +84,7 @@ export default {
 
 .mint-header-title{
   font-size: 16px;
+  color: #fff;
 }
 
 

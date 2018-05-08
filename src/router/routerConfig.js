@@ -5,6 +5,12 @@ const home = resolve =>{
   })  
 }
 
+const chooseAddress = resolve =>{
+	require.ensure(['../pages/address/choose-address/choose-address'], () => {
+    resolve(require('../pages/address/choose-address/choose-address'))
+  })  
+}
+
 export const routes = [
 	{
 		path: '/', 
@@ -13,13 +19,25 @@ export const routes = [
     	//路由元信息  可以将自己定义的一些属性写入， 以便于在路由钩子中判断     
     	meta: {
      	 	path: 'home',
-      	title:'elm',
+      	title:'首页',
 				hasHeader: false,
 				hasTabbar: true
     	}
 	},
 	{
-      path: '*', 
-      redirect: '/' 
-    }
+		path: '/chooseAddress', 
+		name: 'chooseAddress',   // 用于router.push()
+		component: chooseAddress,
+		//路由元信息  可以将自己定义的一些属性写入， 以便于在路由钩子中判断     
+		meta: {
+			path: 'chooseAddress',
+			title:'选择收获地址',
+			hasHeader: true,
+			hasTabbar: false
+		}
+	},
+	{
+		path: '*', 
+		redirect: '/' 
+	}
 ]

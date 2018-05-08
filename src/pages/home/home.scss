@@ -1,3 +1,26 @@
+.mark{
+    flex: auto;
+    display: flex;
+    flex-direction: row-reverse;
+    
+}
+
+.mark_li{
+    border: 1px solid #f2f2f2;
+    border-radius: .02rem;
+    text-align: center;
+    line-height: 0.28rem;
+    @include sc(.24rem,$light-gray);
+    margin-right: .04rem;
+    transform: scale(0.8);
+    transform-origin: right;
+}
+
+.home{
+    width: 100%;
+    height: 100%;
+}
+
 .header{
 	-webkit-box-align: center;
     -ms-flex-align: center;
@@ -67,95 +90,79 @@
 			margin: 0 0.12rem 0 0.24rem;
 		}
 	}
-	>ul{
+	.section_content{
 		width: 100%;
 		>li{
 			width: 100%;
 			border-bottom: 1px solid $bc;
 			padding: .33rem .17rem;
 			display: flex;
-			.img_box{
+			.li_img_box{
                 @include wh(1.20rem,1.24rem);
                 background-color: pink;
                 margin-right: .18rem;
             }
-            .content{
-                flex: auto;
-                .top{
-                    display: flex;
-                    align-items: baseline;
-                    margin-bottom: .12rem;
-                    .badge{
-                        @include wh(0.68rem,0.28rem);
-                        background-color: #ffd930;
-                        @include borderRadius(.02rem);
-                        margin-right: .08rem;
-                        @include sc(0.24rem,$common-black);
-                        text-align: center;
-                        line-height: 0.28rem;
-                        font-weight: bold;
-                    }
-                    .title{
-                        width: 2.8rem;
-                        @include sc(.28rem,$common-black);
-                        font-weight: bold;
-                    }
-                    .mark{
-                        flex: auto;
-                        display: flex;
-                        flex-direction: row-reverse;
-                        li{
-                            @include wh(.28rem,.28rem);
-                            border: 1px solid #f2f2f2;
-                            border-radius: .02rem;
-                            text-align: center;
-                            line-height: 0.28rem;
-                            @include sc(.24rem,$light-gray);
-                            margin-right: .04rem;
-                            transform: scale(0.8);
-                            transform-origin: right;
-                        }
-                    }
-                }
-
-                .center{
-                    display: flex;
-                    margin-bottom: .12rem;
-                    .score{
-                       width: .88rem;
-                       margin-right: .1rem;
-                    }
-                    .score_num{
-                        @include sc(.24rem,#ff5900);
-                        margin-right: .11rem;
-                    }
-                    .monthly_sales{
-                        @include sc(.24rem,$light-gray);
-                    }
-                    .center_mark{
-                        flex: auto;
-                        display: flex;
-                        flex-direction: row-reverse;
-                        li{
-                            padding: 1px;
-                            height: 0.28rem;
-                            border: 1px solid #f2f2f2;
-                            border-radius: .02rem;
-                            text-align: center;
-                            line-height: 0.28rem;
-                            @include sc(.24rem,$light-gray);
-                            margin-right: .04rem;
-                            transform: scale(0.8);
-                            transform-origin: right;
-                        }
-                    }
-                }
-                .bottom{
-                    display: flex;
-                    justify-content: space-between;
-                    @include sc(.24rem,$light-black);
-                }
-            }
+            
 		}
 	}
+}
+
+.li_content{
+    flex: auto;
+    .top{
+        display: flex;
+        align-items: baseline;
+        margin-bottom: .12rem;
+        .badge{
+            @include wh(0.68rem,0.28rem);
+            background-color: #ffd930;
+            @include borderRadius(.02rem);
+            margin-right: .08rem;
+            @include sc(0.24rem,$common-black);
+            text-align: center;
+            line-height: 0.28rem;
+            font-weight: bold;
+        }
+        .title{
+            width: 2.8rem;
+            @include sc(.28rem,$common-black);
+            font-weight: bold;
+        }
+        ul{
+            
+            @extend .mark ;
+            li{
+                @include wh(.28rem,.28rem);
+                @extend .mark_li ;
+            }
+        }
+    }
+
+    .center{
+        display: flex;
+        margin-bottom: .12rem;
+        .score{
+           width: .88rem;
+           margin-right: .1rem;
+        }
+        .score_num{
+            @include sc(.24rem,#ff5900);
+            margin-right: .11rem;
+        }
+        .monthly_sales{
+            @include sc(.24rem,$light-gray);
+        }
+        ul{
+            @extend .mark ;
+            li{
+                padding: .01rem;
+                @extend .mark_li ;
+            }
+        }
+    }
+    .bottom{
+        display: flex;
+        justify-content: space-between;
+        @include sc(.24rem,$light-black);
+    }
 }

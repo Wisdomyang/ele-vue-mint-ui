@@ -1,10 +1,10 @@
 <template>
 	<div class="home">
 		<section class="header">
-			<div>
+			<router-link tag="div" :to="{path: 'chooseAddress'}">
 				<i class="iconfont">&#xe61e;</i>
 				<span>深圳</span>
-			</div>
+			</router-link>
 		</section>
 		<mt-swipe class="home_swiper">
 			<mt-swipe-item v-for="category in categoryList">
@@ -23,14 +23,14 @@
 				<i class="iconfont">&#xe647;</i>
 				<span>附近商家</span>
 			</div>
-			<ul>
+			<ul class="section_content">
 				<li>
-					<div class="img_box"></div>
-					<div class="content">
+					<div class="li_img_box"></div>
+					<div class="li_content">
 						<div class="top">
 							<div class="badge">品牌</div>
 							<div class="title ellipsis">韩国炸鸡的刷卡缴费开始的咖啡机水电费看见是看得见反倒是科技</div>
-							<ul class="mark">
+							<ul>
 								<li>准</li>
 								<li>保</li>
 							</ul>
@@ -39,7 +39,7 @@
 							<div class="score">123</div>
 							<div class="score_num">4.2</div>
 							<div class="monthly_sales">月售669单</div>
-							<ul class="center_mark">
+							<ul>
 								<li>蜂鸟转送</li>
 								<li>必答</li>
 							</ul>
@@ -94,8 +94,5 @@ export default {
 <style lang="scss" scoped>
 @import '../../assets/css/mixin';
 @import './home';
-
-
-
 
 </style>
