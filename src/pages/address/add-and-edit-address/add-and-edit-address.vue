@@ -77,7 +77,7 @@ export default {
 	},
 	methods: {
 		goPage(){
-			this.$router.push('chooseAddress')
+			this.$router.push('confirmAddress')
 		}
 	},
 	mounted (){

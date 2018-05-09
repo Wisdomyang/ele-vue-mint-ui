@@ -17,6 +17,12 @@ const addAndEditAddress = resolve =>{
   })  
 }
 
+const confirmAddress = resolve =>{
+	require.ensure(['../pages/address/confirm-address/confirm-address'], () => {
+    resolve(require('../pages/address/confirm-address/confirm-address'))
+  })  
+}
+
 export const routes = [
 	{
 		path: '/', 
@@ -49,6 +55,17 @@ export const routes = [
 			path: 'addAndEditAddress',
 			title:'新增地址',
 			hasHeader: true,
+			hasTabbar: false
+		}
+	},
+	{
+		path: '/confirmAddress', 
+		name: 'confirmAddress',   
+		component: confirmAddress,
+		meta: {
+			path: 'confirmAddress',
+			title:'确认收货地址',
+			hasHeader: false,
 			hasTabbar: false
 		}
 	},
