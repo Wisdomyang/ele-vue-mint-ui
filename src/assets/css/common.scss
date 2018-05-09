@@ -1,20 +1,76 @@
-body, div, span, header, footer, nav, section, aside, article, ul, dl, dt, dd, li, a, p, h1, h2, h3, h4,h5, h6, i, b, textarea, button, input, select, figure, figcaption, {
-    padding: 0;
-    margin: 0;
-    list-style: none;
-    font-style: normal;
-    text-decoration: none;
-    border: none;
+html{
+    overflow-y:scroll;
+    -webkit-text-size-adjust:100%;
+    -ms-text-size-adjust:100%;
     color: #333;
-    font-weight: normal;
-    font-family: "Microsoft Yahei";
-    box-sizing: border-box;
-    -webkit-tap-highlight-color:transparent;
-    -webkit-font-smoothing: antialiased;
-    &:hover{
-        outline: none;
-    }
 }
+
+html *{outline:0;
+    -webkit-text-size-adjust:none;
+    -webkit-tap-highlight-color:rgba(0,0,0,0);
+}
+
+html,body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td,hr,button,article,aside,details,figcaption,figure,footer,header,hgroup,menu,nav,section{
+    margin:0;
+    padding:0;
+}
+
+input,select,textarea{
+    font-size:100%
+}
+
+table{
+    border-collapse:collapse;
+    border-spacing:0;
+}
+
+fieldset,img{
+    border:0;
+}
+
+abbr,acronym{
+    border:0;
+    font-variant:normal;
+}
+
+del{
+    text-decoration:line-through;
+}
+
+address,caption,cite,code,dfn,em,th,var{
+    font-style:normal;
+    font-weight:500;
+}
+
+ol,ul{
+    list-style:none;
+}
+
+caption,th{
+    text-align:left;
+}
+
+h1,h2,h3,h4,h5,h6{
+    font-size:100%;
+    font-weight:500;
+}
+
+q:before,q:after{
+    content:'';
+}
+
+sub,sup{
+    font-size:75%;
+    line-height:0;
+    position:relative;
+    vertical-align:baseline;
+}
+
+sup{top:-.5em}
+
+sub{bottom:-.25em}
+
+ins,a{text-decoration:none}
 
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/  
 ::-webkit-scrollbar  
@@ -53,6 +109,10 @@ html,body{
     font-size: 12px;
 }
 
+div,span,section,i{
+    box-sizing: border-box;
+}
+
 
 
 .clear:after{
@@ -70,25 +130,7 @@ html,body{
     background-size: 100% 100%;
 }
 
-.margin{
-    margin: 0 auto;
-}
 
-.left{
-    float: left;
-}
-
-.right{
-    float: right;
-}
-
-.hide{
-    display: none;
-}
-
-.show{
-    display: block;
-}
 
 .ellipsis{
     overflow: hidden;
@@ -96,18 +138,3 @@ html,body{
     white-space: nowrap;
 }
 
-.paddingTop{
-    padding-top: 1.95rem;
-}
-
-@keyframes backOpacity{
-   0%   { opacity: 1 }
-   25%  { opacity: .5 }
-   50%  { opacity: 1 }
-   75%  { opacity: .5 }
-   100% { opacity: 1 }
-}
-
-.animation_opactiy{
-    animation: backOpacity 2s ease-in-out infinite;
-}

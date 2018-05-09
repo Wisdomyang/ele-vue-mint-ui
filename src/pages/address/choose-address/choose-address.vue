@@ -1,7 +1,7 @@
 <template>
 	<div class="choose-address">
 		<section class="search">
-			<mt-search style="height: 100%" v-model="value" placeholder="请输入地址" cancel-text=""></mt-search>
+			<mt-search style="height: 100%;" v-model="value" placeholder="请输入地址" cancel-text=""></mt-search>
 			<div class="current-address">
 				<div class="title">当前地址</div>
 				<div class="address">
@@ -39,11 +39,10 @@
 					</div>
 				</li>
 			</ul>
-
-			<div class="add-address">
+			<router-link tag="div" class="add-address" :to="{path: 'addAndEditAddress'}">
 				<span>新增地址</span>
 				<i class="iconfont">&#xe74e;</i>
-			</div>
+			</router-link>
 		</section>
 		
 

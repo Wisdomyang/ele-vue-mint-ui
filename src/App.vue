@@ -87,6 +87,14 @@ export default {
   color: #fff;
 }
 
+.mint-cell-wrapper{
+  background: none;
+}
+
+.mint-cell:last-child{
+  background: none;
+}
+
 
 
 .child-view {

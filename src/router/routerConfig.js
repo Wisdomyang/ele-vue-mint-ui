@@ -11,10 +11,16 @@ const chooseAddress = resolve =>{
   })  
 }
 
+const addAndEditAddress = resolve =>{
+	require.ensure(['../pages/address/add-and-edit-address/add-and-edit-address'], () => {
+    resolve(require('../pages/address/add-and-edit-address/add-and-edit-address'))
+  })  
+}
+
 export const routes = [
 	{
 		path: '/', 
-    	name: 'home',   // 用于router.push()
+    	name: 'home',   
     	component: home,
     	//路由元信息  可以将自己定义的一些属性写入， 以便于在路由钩子中判断     
     	meta: {
@@ -26,12 +32,22 @@ export const routes = [
 	},
 	{
 		path: '/chooseAddress', 
-		name: 'chooseAddress',   // 用于router.push()
+		name: 'chooseAddress',   
 		component: chooseAddress,
-		//路由元信息  可以将自己定义的一些属性写入， 以便于在路由钩子中判断     
 		meta: {
 			path: 'chooseAddress',
 			title:'选择收获地址',
+			hasHeader: true,
+			hasTabbar: false
+		}
+	},
+	{
+		path: '/addAndEditAddress', 
+		name: 'addAndEditAddress',   
+		component: addAndEditAddress,
+		meta: {
+			path: 'addAndEditAddress',
+			title:'新增地址',
 			hasHeader: true,
 			hasTabbar: false
 		}
