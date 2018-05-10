@@ -9,7 +9,8 @@ export default{
 		return {
             map: null,
             geolocation: null,
-            geocoder: null
+            geocoder: null,
+            address: null
 		}
     },
     props:{
@@ -30,7 +31,8 @@ export default{
     },
 	methods:{
         ...mapActions([
-			'setPositionResult'
+            'setPositionResult',
+            'setPositionStatus'
 		]),
 		create(){
             return new Promise((resolve,reject) => {
@@ -42,9 +44,6 @@ export default{
             })
         },
         position(){
-            if(this.positionResult){
-                return;
-            }
             this.map.plugin('AMap.Geolocation', () => {
                 this.geolocation = new AMap.Geolocation({
                     enableHighAccuracy: true,//是否使用高精度定位，默认:true
@@ -65,11 +64,14 @@ export default{
                                         //	3: 所有终端禁止使用浏览器定位
                 });
                 this.map.addControl(this.geolocation);
+                this.$store.dispatch('setPositionStatus','positioning');
                 this.geolocation.getCurrentPosition((status,result) => {
                     if(status == 'complete'){
+                        this.$store.dispatch('setPositionStatus','success');
                         this.$store.dispatch('setPositionResult',result)
                     }else{
                         // UserService.showTips('定位失败');
+                        this.$store.dispatch('setPositionStatus','fail');
                         this.map.setZoomAndCenter(18,[116.396749,39.918055]);
                     }
                 });
@@ -87,7 +89,7 @@ export default{
         getAddress(lnglatXY){
             this.geocoder.getAddress(lnglatXY, (status, result) => {
                 if (status === 'complete' && result.info === 'OK') {
-                    this.$store.dispatch('setPositionResult',result.regeocode)
+                    this.$store.dispatch('setPositionResult',result.regeocode)  // 还是要向外传递地址
                 }
             });      
         }
@@ -99,8 +101,13 @@ export default{
     },
     mounted () {
         this.create().then(map => {
-            this.position();
             if(this.amapId === 'confirm-address'){
+                if(this.address){  // 父组件传入的经纬度， 没有则用展示定位的地址
+
+                }else{
+                    console.log(123)
+                    this.map.setCenter(this.positionResult.position);
+                }
                 this.regeocoder();
                 let centerMarker = new AMap.Marker({
                     map: map,
@@ -112,6 +119,8 @@ export default{
                     centerMarker.setPosition([pos.lng,pos.lat])
                     this.getAddress([pos.lng,pos.lat])
                 })   
+            }else{
+                this.position();
             }
         });
     }

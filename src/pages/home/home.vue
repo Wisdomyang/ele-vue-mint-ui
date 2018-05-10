@@ -57,7 +57,7 @@
 
 <script>
 import { Toast,Indicator } from 'mint-ui';
-import {ajax} from "../../common/ajaxUtils/ajax";
+import { homeService } from './home.service';
 import {data} from "../../mock";
 import {mapActions,mapGetters} from 'vuex';
 export default {
@@ -73,13 +73,16 @@ export default {
 		})  
 	},
 	methods: {
-		
+		getCategoryList(){
+			
+			homeService.getCategoryList().then(res => {
+				this.categoryList = res.data.swiperItem;
+			});
+		}
 	},
-	mounted (){
-		ajax.get('swiperList').then(res => {
-			this.categoryList = res.data.swiperItem;
-		})
-	}
+	created () {
+		this.getCategoryList();
+	} 
 }
 </script>
 

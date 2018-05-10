@@ -6,19 +6,19 @@
 				&#xe612;
 			</router-link>
 		</mt-header>
-		<amap @getCurrentPosition="getCurrentPosition($event)" :again="positionAgian" :isShow="true" :amapId="'confirm-address'"></amap>
-		<section class="footer" v-show="street">
+		<amap :again="positionAgian" :isShow="true" :amapId="'confirm-address'"></amap>
+		<section class="footer" v-show="this.positionResult">
 			<ul class="movend-address">
 				<li>
 					<i class="iconfont">&#xe61e;</i>
 					<div>
-						<span>{{street}}</span>
+						<span>{{`${this.positionResult? this.positionResult.addressComponent.street: ''}${this.positionResult? this.positionResult.addressComponent.streetNumber: ''}`}}</span>
 						<i class="iconfont" style="color: #d7d7d7;">&#xe74e;</i>
 					</div>
 				</li>
 				<li>
 					<i></i>
-					<span class="ellipsis">{{formattedAddress}}</span>
+					<span class="ellipsis">{{`${this.positionResult? this.positionResult.formattedAddress: ''}`}}</span>
 				</li>
 			</ul>
 			<div class="save">
@@ -33,6 +33,7 @@ import { Toast,Indicator } from 'mint-ui';
 import {ajax} from "../../../common/ajaxUtils/ajax";
 import amap from '../../../components/amap/amap';
 import { appUtils } from '../../../common/appUtils/appUtils';
+import {mapActions,mapGetters} from 'vuex';
 export default {
 	data () {
 		return {
@@ -42,22 +43,17 @@ export default {
 			positionAgian: false
 		}
 	},
+	computed: {
+		...mapGetters({
+			positionResult: 'positionResult'
+		})  
+	},
 	components: {
 		amap
 	},
 	methods: {
-		getCurrentPosition(e){
-			if(e.regeocode){
-				this.street = `${e.regeocode.addressComponent.street}${e.regeocode.addressComponent.streetNumber}`
-				this.formattedAddress = e.regeocode.formattedAddress;
-			}else{
-				this.street = `${e.addressComponent.street}${e.addressComponent.streetNumber}`;
-				this.formattedAddress = e.formattedAddress;
-			}
-			
-		},
 		positionAgianFun(){
-			this.positionAgian = !this.positionAgian;
+			
 		},
 		goback(){
 			appUtils.goBack();

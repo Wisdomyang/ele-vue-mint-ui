@@ -1,24 +1,38 @@
 <template>
   <div id="app">
-    
-    <transition :name="routerTrans">
-      <router-view class="child-view" :class="{no_header: !$route.meta.hasHeader,no_tabbar: !$route.meta.hasTabbar}"></router-view>
-    </transition>
     <amap :again="positionAgian" :isShow="false" :amapId="'appAmap'"></amap>
-    <mt-header :title="title" fixed v-show="$route.meta.hasHeader">
-      <i class="iconfont" style="color: #fff" slot="left" @click="goback()">&#xe682;</i>
-    </mt-header>
-    <mt-tabbar v-model="tabbarSelected" fixed v-show="$route.meta.hasTabbar">
-      <mt-tab-item :id="item.id" v-for="item in tabs" :key="item.id">
-        <i class="iconfont" slot="icon" style="font-size: 20px" v-html="item.icon" :class="{tab_active: tabbarSelected == item.id}" @click="tabSelected(item)"></i><span @click="tabSelected(item)" :class="{tab_active: tabbarSelected == item.id}">{{item.name}}</span>
-      </mt-tab-item>
-    </mt-tabbar>
+
+    <!-- 定位中的动画 -->
+    <section class="positioning" v-if="positionStatus === 'positioning' && $route.meta.path == 'home'">
+      定位中。。
+    </section>
+
+    <!-- 定位失败  会出现手动定位和重新定位   positionAgian-->
+		<section class="fail_position" v-if="positionStatus === 'fail'">
+			定位失败。。 请手动定位。 
+		</section>
+		<!-- 定位成功 -->
+    <section class="success_position" v-if="positionStatus === 'success'">
+      <transition :name="routerTrans">
+        <router-view class="child-view" :class="{no_header: !$route.meta.hasHeader,no_tabbar: !$route.meta.hasTabbar}"></router-view>
+      </transition>
+      <mt-header :title="title" fixed v-show="$route.meta.hasHeader">
+        <i class="iconfont" style="color: #fff" slot="left" @click="goback()">&#xe682;</i>
+      </mt-header>
+      <mt-tabbar v-model="tabbarSelected" fixed v-show="$route.meta.hasTabbar">
+        <mt-tab-item :id="item.id" v-for="item in tabs" :key="item.id">
+          <i class="iconfont" slot="icon" style="font-size: 20px" v-html="item.icon" :class="{tab_active: tabbarSelected == item.id}" @click="tabSelected(item)"></i><span @click="tabSelected(item)" :class="{tab_active: tabbarSelected == item.id}">{{item.name}}</span>
+        </mt-tab-item>
+      </mt-tabbar>
+    </section>
+    
   </div>
 </template>
 
 <script>
 import { appUtils } from './common/appUtils/appUtils';
 import amap from './components/amap/amap';
+import {mapActions,mapGetters} from 'vuex';
 export default {
   name: 'app',
   data (){
@@ -50,6 +64,12 @@ export default {
   components: {
       amap
   },
+  computed: {
+    ...mapGetters({
+      positionResult: 'positionResult',
+      positionStatus: 'positionStatus'
+		})  
+  },
   methods: {
    
     tabSelected(item){
@@ -70,7 +90,12 @@ export default {
 			}else{
 				this.routerTrans='slide-left';
       }
-      this.positionAgian = !this.positionAgian;
+
+      // 由于该项目只能从首页进入，所以没必要。
+      // if(to.meta.path != 'confirmAddress'){
+      //   this.positionAgian = !this.positionAgian;
+      // }
+      
     }
 
 
@@ -119,6 +144,10 @@ export default {
 
   .mint-button--default{
     box-shadow: none;
+  }
+
+  .fail_position,.success_position,.positioning{
+    height: 100%;
   }
 }
 
