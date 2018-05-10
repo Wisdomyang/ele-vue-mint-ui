@@ -5,6 +5,8 @@ import App from './App'
 import MintUI from 'mint-ui'
 import VueRouter from 'vue-router'
 import axios from "axios"
+import Vuex from 'vuex'
+import store from './vuex/index';
 import {routes} from './router/routerConfig'
 import './assets/css/common'
 import './assets/css/style'
@@ -40,6 +42,7 @@ const router = new VueRouter({
 //	next();
 //})
 const app = new Vue({
-	router,
+    router,
+    store,
 	render:h => h(App)
 }).$mount('#app')

@@ -4,7 +4,7 @@
     <transition :name="routerTrans">
       <router-view class="child-view" :class="{no_header: !$route.meta.hasHeader,no_tabbar: !$route.meta.hasTabbar}"></router-view>
     </transition>
-    
+    <amap :again="positionAgian" :isShow="false" :amapId="'appAmap'"></amap>
     <mt-header :title="title" fixed v-show="$route.meta.hasHeader">
       <i class="iconfont" style="color: #fff" slot="left" @click="goback()">&#xe682;</i>
     </mt-header>
@@ -18,6 +18,7 @@
 
 <script>
 import { appUtils } from './common/appUtils/appUtils';
+import amap from './components/amap/amap';
 export default {
   name: 'app',
   data (){
@@ -25,6 +26,7 @@ export default {
       title: '',
       routerTrans: 'slide-left',
       tabbarSelected: 0,
+      positionAgian: false,
       tabs: [{
         name: '外卖',
         id: 0,
@@ -45,7 +47,11 @@ export default {
       }]
     }
   },
+  components: {
+      amap
+  },
   methods: {
+   
     tabSelected(item){
       item.path && this.$router.push(item.path)
     },
@@ -59,12 +65,15 @@ export default {
       this.title = to.meta.title;
       document.title = to.meta.title;
       if(window.isBack){
-				 this.routerTrans='slide-right';
-				 window.isBack = false;
+        this.routerTrans='slide-right';
+        window.isBack = false;
 			}else{
 				this.routerTrans='slide-left';
-			}
+      }
+      this.positionAgian = !this.positionAgian;
     }
+
+
   },
   mounted () {
    

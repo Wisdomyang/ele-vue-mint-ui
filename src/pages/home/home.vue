@@ -3,7 +3,7 @@
 		<section class="header">
 			<router-link tag="div" :to="{path: 'chooseAddress'}">
 				<i class="iconfont">&#xe61e;</i>
-				<span>深圳</span>
+				<span>{{`${this.positionResult? this.positionResult.addressComponent.street: ''}${this.positionResult? this.positionResult.addressComponent.streetNumber: ''}`}}</span>
 			</router-link>
 		</section>
 		<mt-swipe class="home_swiper">
@@ -59,26 +59,26 @@
 import { Toast,Indicator } from 'mint-ui';
 import {ajax} from "../../common/ajaxUtils/ajax";
 import {data} from "../../mock";
+import {mapActions,mapGetters} from 'vuex';
 export default {
 	data () {
 		return {
-			title: '深圳',
+			title: '',
 			categoryList: []
-			
 		}
+	},
+	computed: {
+		...mapGetters({
+			positionResult: 'positionResult'
+		})  
 	},
 	methods: {
 		
 	},
 	mounted (){
-		
 		ajax.get('swiperList').then(res => {
-			
 			this.categoryList = res.data.swiperItem;
 		})
-		
-
-		
 	}
 }
 </script>

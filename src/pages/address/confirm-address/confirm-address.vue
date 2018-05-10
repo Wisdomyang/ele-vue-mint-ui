@@ -6,7 +6,7 @@
 				&#xe612;
 			</router-link>
 		</mt-header>
-		<amap @getCurrentPosition="getCurrentPosition($event)" :again="positionAgian" :isShow="true"></amap>
+		<amap @getCurrentPosition="getCurrentPosition($event)" :again="positionAgian" :isShow="true" :amapId="'confirm-address'"></amap>
 		<section class="footer" v-show="street">
 			<ul class="movend-address">
 				<li>
