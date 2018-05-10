@@ -1,5 +1,5 @@
 <template>
-	<div id="amap"></div>
+	<div id="amap" v-show="isShow"></div>
 </template>
 <script>
 export default{
@@ -10,7 +10,8 @@ export default{
             geolocation: null,
             geocoder: null
 		}
-	},
+    },
+    props: ['again','isShow'],
 	methods:{
 		create(){
             return new Promise((resolve,reject) => {
@@ -21,8 +22,8 @@ export default{
                 resolve(this.map);
             })
         },
-        rePosition(mapObj){
-            mapObj.plugin('AMap.Geolocation', () => {
+        position(){
+            this.map.plugin('AMap.Geolocation', () => {
                 this.geolocation = new AMap.Geolocation({
                     enableHighAccuracy: true,//是否使用高精度定位，默认:true
                     timeout: 10000,          //超过10秒后停止定位，默认：无穷大
@@ -41,24 +42,22 @@ export default{
                                         //	2: PC上禁止使用浏览器定位
                                         //	3: 所有终端禁止使用浏览器定位
                 });
-                mapObj.addControl(this.geolocation);
-                this.getCurrentPosition();
+                this.map.addControl(this.geolocation);
+                this.geolocation.getCurrentPosition((status,result) => {
+                    if(status == 'complete'){
+                        console.log(result);
+                        // this.geolocationCenter = result.position;
+                        this.$emit('getCurrentPosition', result)
+                    }else{
+                        // UserService.showTips('定位失败');
+                        this.map.setZoomAndCenter(18,[116.396749,39.918055]);
+                    }
+                });
                 
             });
         },
-        getCurrentPosition(){
-            this.geolocation.getCurrentPosition((status,result) => {
-                if(status == 'complete'){
-                    // this.geolocationCenter = result.position;
-                    this.$emit('getCurrentPosition', result)
-                }else{
-                    // UserService.showTips('定位失败');
-                    mapObj.setZoomAndCenter(18,[116.396749,39.918055]);
-                }
-            });
-        },
-        regeocoder(mapObj){   
-            mapObj.plugin('AMap.Geocoder', () => {
+        regeocoder(){   
+            this.map.plugin('AMap.Geocoder', () => {
                 this.geocoder = new AMap.Geocoder({
                     radius: 1000,
                     extensions: "all"
@@ -74,10 +73,15 @@ export default{
             });      
         }
     },
+    watch: {
+        again(newV){
+            this.position();
+        }
+    },
     mounted () {
         this.create().then(map => {
-            this.rePosition(map);
-            this.regeocoder(map);
+            this.position();
+            this.regeocoder();
             let centerMarker = new AMap.Marker({
                 map: map,
                 position: map.getCenter(),

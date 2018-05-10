@@ -23,6 +23,18 @@ const confirmAddress = resolve =>{
   })  
 }
 
+const searchAddress = resolve =>{
+	require.ensure(['../pages/address/search-address/search-address'], () => {
+    resolve(require('../pages/address/search-address/search-address'))
+  })  
+}
+
+const userAddress = resolve =>{
+	require.ensure(['../pages/address/user-address/user-address'], () => {
+    resolve(require('../pages/address/user-address/user-address'))
+  })  
+}
+
 export const routes = [
 	{
 		path: '/', 
@@ -43,7 +55,7 @@ export const routes = [
 		meta: {
 			path: 'chooseAddress',
 			title:'选择收获地址',
-			hasHeader: true,
+			hasHeader: false,
 			hasTabbar: false
 		}
 	},
@@ -65,6 +77,28 @@ export const routes = [
 		meta: {
 			path: 'confirmAddress',
 			title:'确认收货地址',
+			hasHeader: false,
+			hasTabbar: false
+		}
+	},
+	{
+		path: '/searchAddress', 
+		name: 'searchAddress',   
+		component: searchAddress,
+		meta: {
+			path: 'searchAddress',
+			title:'搜索地址',
+			hasHeader: false,
+			hasTabbar: false
+		}
+	},
+	{
+		path: '/userAddress', 
+		name: 'userAddress',   
+		component: userAddress,
+		meta: {
+			path: 'userAddress',
+			title:'收货地址',
 			hasHeader: false,
 			hasTabbar: false
 		}

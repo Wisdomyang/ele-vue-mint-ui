@@ -83,14 +83,6 @@ export default {
 }
 </script>
 
-<style type="text/css">
-
-.mint-swipe-indicator.is-active{
-	background: #26a2ff;
-	opacity: 1;
-}
-</style>
-
 <style lang="scss" scoped>
 @import '../../assets/css/mixin';
 @import './home';

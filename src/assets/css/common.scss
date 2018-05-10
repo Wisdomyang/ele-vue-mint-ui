@@ -72,6 +72,21 @@ sub{bottom:-.25em}
 
 ins,a{text-decoration:none}
 
+html,body{
+    height: 100%;
+    width: 100%;
+    background-color: #F5F5F5;
+    font-size: 12px;
+}
+
+div,span,section,i{
+    box-sizing: border-box;
+}
+
+i,em{
+    font-style: normal;
+}
+
 /*定义滚动条高宽及背景 高宽分别对应横竖滚动条的尺寸*/  
 ::-webkit-scrollbar  
 {  
@@ -101,17 +116,6 @@ input[type="button"], input[type="submit"], input[type="search"], input[type="re
 }
 
 textarea { -webkit-appearance: none;}   
-
-html,body{
-    height: 100%;
-    width: 100%;
-    background-color: #F5F5F5;
-    font-size: 12px;
-}
-
-div,span,section,i{
-    box-sizing: border-box;
-}
 
 
 

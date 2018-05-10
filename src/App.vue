@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import { appUtils } from './common/appUtils/appUtils';
 export default {
   name: 'app',
   data (){
@@ -49,7 +50,7 @@ export default {
       item.path && this.$router.push(item.path)
     },
     goback(){
-      window.history.go(-1);
+      appUtils.goBack();
     }
   },
 
@@ -57,6 +58,12 @@ export default {
     $route(to,from){
       this.title = to.meta.title;
       document.title = to.meta.title;
+      if(window.isBack){
+				 this.routerTrans='slide-right';
+				 window.isBack = false;
+			}else{
+				this.routerTrans='slide-left';
+			}
     }
   },
   mounted () {
@@ -80,21 +87,31 @@ export default {
   .no_tabbar{
     padding-bottom: 0;
   }
-}
 
-.mint-header-title{
-  font-size: 16px;
-  color: #fff;
-}
+  .mint-swipe-indicator.is-active{
+    background: #26a2ff;
+    opacity: 1;
+  }
 
-.mint-cell-wrapper{
-  background: none;
-}
+  .mint-header-title{
+    font-size: 16px;
+    color: #fff;
+  }
 
-.mint-cell:last-child{
-  background: none;
-}
+  .mint-cell-wrapper{
+    background: none;
+    
+  }
 
+  .mint-cell:last-child{
+    background-image: none;
+  }
+
+
+  .mint-button--default{
+    box-shadow: none;
+  }
+}
 
 
 .child-view {

@@ -2,11 +2,11 @@
 	<div class="confirm-address">
 		<mt-header :title="title" fixed>
 			<i class="iconfont" style="color: #fff" slot="left" @click="goback()">&#xe682;</i>
-			<router-link tag="i" :to="{path: 'chooseAddress'}" class="iconfont" style="color: #fff" slot="right">
-				<i class="iconfont">&#xe612;</i>
+			<router-link tag="i" :to="{path: 'searchAddress'}" class="iconfont" style="color: #fff" slot="right">
+				&#xe612;
 			</router-link>
 		</mt-header>
-		<amap @getCurrentPosition="getCurrentPosition($event)"></amap>
+		<amap @getCurrentPosition="getCurrentPosition($event)" :again="positionAgian" :isShow="true"></amap>
 		<section class="footer" v-show="street">
 			<ul class="movend-address">
 				<li>
@@ -17,15 +17,12 @@
 					</div>
 				</li>
 				<li>
-					<i class="formattedAddress"></i>
+					<i></i>
 					<span class="ellipsis">{{formattedAddress}}</span>
 				</li>
 			</ul>
-				
-				
-			
 			<div class="save">
-				<mt-button class="btn">确定</mt-button>
+				<mt-button class="btn" @click="positionAgianFun()">确定</mt-button>
 			</div>
 		</section>
 	</div>
@@ -35,12 +32,14 @@
 import { Toast,Indicator } from 'mint-ui';
 import {ajax} from "../../../common/ajaxUtils/ajax";
 import amap from '../../../components/amap/amap';
+import { appUtils } from '../../../common/appUtils/appUtils';
 export default {
 	data () {
 		return {
 			title: '确认收货地址',
 			street: '',
-			formattedAddress: ''
+			formattedAddress: '',
+			positionAgian: false
 		}
 	},
 	components: {
@@ -52,10 +51,16 @@ export default {
 				this.street = `${e.regeocode.addressComponent.street}${e.regeocode.addressComponent.streetNumber}`
 				this.formattedAddress = e.regeocode.formattedAddress;
 			}else{
-				this.street = `${e.addressComponent.street}${e.addressComponent.streetNumber}`
+				this.street = `${e.addressComponent.street}${e.addressComponent.streetNumber}`;
 				this.formattedAddress = e.formattedAddress;
 			}
 			
+		},
+		positionAgianFun(){
+			this.positionAgian = !this.positionAgian;
+		},
+		goback(){
+			appUtils.goBack();
 		}
 	},
 	mounted (){

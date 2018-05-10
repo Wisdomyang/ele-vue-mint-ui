@@ -1,0 +1,40 @@
+.st-radio{
+	overflow:hidden;
+	width: 100%;
+	min-height: .96rem;
+	display: flex;
+	align-items: center;
+	.radia-core{
+		position:relative;
+		width: 1.42rem;
+		height: .56rem;
+		border-radius: .06rem;
+		line-height: .56rem;
+		margin-right: .2rem;
+		input{
+			border: none;
+			position: absolute;
+			font-size: 0;
+			width: 1.42rem;
+			height: .56rem;
+			opacity: 0;
+		}
+		.circle{
+			display: inline-block;
+			position: absolute;
+			width: 1.42rem;
+			border: 1px solid $bc;
+			border-radius: .06rem;
+			box-sizing: content-box;
+			height: .56rem;
+			text-align: center;
+			line-height: .56rem;
+			left:0;
+			top:0;
+		}
+		.active{
+			color:$blue;
+			border-color:$blue;
+		}
+	}
+}

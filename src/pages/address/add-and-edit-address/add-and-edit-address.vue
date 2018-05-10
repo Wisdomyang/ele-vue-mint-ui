@@ -28,7 +28,7 @@
 			</div>
 			<div class="field">
 				<label>标签</label>
-				<div class="input">
+				<div class="input last_input">
 					<st-radio :options="tagOptions" :init="0" name="tag" v-model="tag"></st-radio>
 				</div>
 			</div>
@@ -88,10 +88,6 @@ export default {
 }
 </script>
 
-<style type="text/css">
-
-
-</style>
 
 <style lang="scss" scoped>
 @import '../../../assets/css/mixin';

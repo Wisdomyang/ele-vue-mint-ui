@@ -20,6 +20,9 @@
             flex: auto;
             border-bottom: 1px solid $bc;
         }
+        .last_input{
+            border: none;
+        }
         
     }
 }
@@ -34,9 +37,6 @@
         color: #fff;
         text-align: center;
         line-height: 1rem;
-    }
-    .mint-button--default{
-        box-shadow: none;
     }
 }
 
