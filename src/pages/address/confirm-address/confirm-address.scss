@@ -11,7 +11,8 @@
     padding: 0 .16rem;
     position: absolute;
     left: 0;
-    bottom: .4rem;
+    z-index: 2;
+    bottom: .2rem;
     .movend-address{
         height: 1.86rem;
         background-color: #fff;

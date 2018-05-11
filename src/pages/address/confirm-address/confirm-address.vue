@@ -6,7 +6,7 @@
 				&#xe612;
 			</router-link>
 		</mt-header>
-		<amap :again="positionAgian" :isShow="true" :amapId="'confirm-address'"></amap>
+		<!-- <amap :again="positionAgian" :isShow="true" :amapId="'confirm-address'"></amap> -->
 		<section class="footer" v-show="this.positionResult">
 			<ul class="movend-address">
 				<li>
@@ -30,9 +30,9 @@
 
 <script>
 import { Toast,Indicator } from 'mint-ui';
-import {ajax} from "../../../common/ajaxUtils/ajax";
+import {ajax} from "../../../common/ajax";
 import amap from '../../../components/amap/amap';
-import { appUtils } from '../../../common/appUtils/appUtils';
+import { appUtils } from '../../../common/appUtils';
 import {mapActions,mapGetters} from 'vuex';
 export default {
 	data () {

@@ -1,4 +1,4 @@
-import { ajax } from '../../common/ajaxUtils/ajax';
+import { ajax } from '../../common/ajax';
 
 export const homeService = {
     getCategoryList: () => {

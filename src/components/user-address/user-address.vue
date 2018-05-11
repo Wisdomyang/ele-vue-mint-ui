@@ -1,34 +1,26 @@
 <template>
 	<div class="user-address-component">
-		<ul class="login-in">
-			<li>
+		<ul class="login-in" v-if="userAddressList.length > 0">
+			<li v-for="item in userAddressList" :key="item.id">
 				<router-link tag="i" class="iconfont" :to="{path: 'addAndEditAddress'}" v-if="isShowEdit">
 					&#xe61c;
 				</router-link>
 				<div class="container">
-					<div class="address">地方</div>
-					<div class="street">开始可就是快乐飞机</div>
+					<div class="street">{{item.street}}</div>
+					<div class="address">{{item.formattedAddress}}</div>
 					<div class="user-info">
-						<span>看世界的恐惧</span><i>可敬可嘉看</i>
-					</div>
-				</div>
-			</li>
-			<li>
-				<router-link tag="i" class="iconfont" :to="{path: 'addAndEditAddress'}" v-if="isShowEdit">
-					&#xe61c;
-				</router-link>
-				<div class="container">
-					<div class="address">地方</div>
-					<div class="street">开始可就是快乐飞机</div>
-					<div class="user-info">
-						<span>看世界的恐惧</span><i>可敬可嘉看</i>
+						<span>{{item.userName}}</span><i>{{item.phone}}</i>
 					</div>
 				</div>
 			</li>
 		</ul>
+		<div class="text" v-if="userAddressList.length == 0">
+			暂时没有收货地址，请添加。
+		</div>
 	</div>
 </template>
 <script>
+import { mapGetters,mapActions } from 'vuex';
 export default{
 	name:'user-address',
 	data(){
@@ -37,6 +29,11 @@ export default{
 		}
 	},
 	props:['isShowEdit'],
+	 computed: {
+        ...mapGetters({
+			userAddressList: 'userAddressList'
+		})  
+    },
 	methods:{
 		
 	}
@@ -60,12 +57,12 @@ export default{
 		}
 		.container{
 			flex: auto;
-			.address{
+			.street{
 				font-size: .32rem;
 				font-weight: bold;
 				margin-bottom: .04rem;
 			}
-			.street{
+			.address{
 				font-size: .32rem;
 				color: $light-black;
 				margin-bottom: .1rem;
@@ -83,5 +80,10 @@ export default{
 		}
 		
 	}
+}
+
+.text{
+	margin-top: .08rem;
+	font-size: .32rem;
 }
 </style>

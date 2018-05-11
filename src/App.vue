@@ -1,18 +1,18 @@
 <template>
   <div id="app">
-    <amap :again="positionAgian" :isShow="false" :amapId="'appAmap'"></amap>
-
+    
+    <amap :again="positionAgain" :positionPlaceSearch="positionPlaceSearch" :isShow="$route.meta.path === 'confirmAddress'? true : false" :amapId="'appAmap'"></amap>
     <!-- 定位中的动画 -->
-    <section class="positioning" v-if="positionStatus === 'positioning' && $route.meta.path == 'home'">
+    <section class="positioning" v-if="positionStatus === 'positioning' && $route.meta.path === 'home'">
       定位中。。
     </section>
 
-    <!-- 定位失败  会出现手动定位和重新定位   positionAgian-->
+    <!-- 定位失败 会出现手动定位和重新定位 positionAgian-->
 		<section class="fail_position" v-if="positionStatus === 'fail'">
 			定位失败。。 请手动定位。 
 		</section>
 		<!-- 定位成功 -->
-    <section class="success_position" v-if="positionStatus === 'success'">
+    <section class="success_position">
       <transition :name="routerTrans">
         <router-view class="child-view" :class="{no_header: !$route.meta.hasHeader,no_tabbar: !$route.meta.hasTabbar}"></router-view>
       </transition>
@@ -26,11 +26,12 @@
       </mt-tabbar>
     </section>
     
+   
   </div>
 </template>
 
 <script>
-import { appUtils } from './common/appUtils/appUtils';
+import { appUtils } from './common/appUtils';
 import amap from './components/amap/amap';
 import {mapActions,mapGetters} from 'vuex';
 export default {
@@ -40,7 +41,6 @@ export default {
       title: '',
       routerTrans: 'slide-left',
       tabbarSelected: 0,
-      positionAgian: false,
       tabs: [{
         name: '外卖',
         id: 0,
@@ -67,7 +67,9 @@ export default {
   computed: {
     ...mapGetters({
       positionResult: 'positionResult',
-      positionStatus: 'positionStatus'
+      positionStatus: 'positionStatus',
+      positionAgain: 'positionAgain',
+      positionPlaceSearch: 'positionPlaceSearch'
 		})  
   },
   methods: {
@@ -112,6 +114,7 @@ export default {
 #app{
   width: 100%;
   height: 100%;
+  position: relative;
   .tab_active{
     color: $blue;
   }
@@ -148,6 +151,9 @@ export default {
 
   .fail_position,.success_position,.positioning{
     height: 100%;
+  }
+  .amap-logo,.amap-copyright{
+    display: none !important;
   }
 }
 

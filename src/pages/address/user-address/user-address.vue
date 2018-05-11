@@ -16,7 +16,7 @@
 <script>
 import { Toast,Indicator } from 'mint-ui';
 import userAddress from '../../../components/user-address/user-address';
-import { appUtils } from '../../../common/appUtils/appUtils';
+import { appUtils } from '../../../common/appUtils';
 export default {
 	data () {
 		return {

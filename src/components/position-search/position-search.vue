@@ -16,7 +16,7 @@
 	
 </template>
 <script>
-import { appUtils } from '../../common/appUtils/appUtils';
+import { appUtils } from '../../common/appUtils';
 export default{
 	name:'position-search',
 	data(){

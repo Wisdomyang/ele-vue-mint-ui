@@ -6,6 +6,7 @@ import MintUI from 'mint-ui'
 import VueRouter from 'vue-router'
 import axios from "axios"
 import Vuex from 'vuex'
+import VeeValidate from 'vee-validate'
 import store from './vuex/index';
 import {routes} from './router/routerConfig'
 import './assets/css/common'
@@ -16,6 +17,13 @@ import './config/rem'
 Vue.config.productionTip = false
 Vue.use(MintUI)
 Vue.use(VueRouter)
+const veeValidateConfig = {
+	delay: 0,
+	// locale: 'zh_CN',
+	messages: null,
+	strict: true
+};
+Vue.use(VeeValidate,veeValidateConfig);
 /* eslint-disable no-new */
 const router = new VueRouter({
     mode: 'history', // 去掉hash模式

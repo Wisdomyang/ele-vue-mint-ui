@@ -35,6 +35,12 @@ const userAddress = resolve =>{
   })  
 }
 
+const login = resolve =>{
+	require.ensure(['../pages/login/login'], () => {
+    resolve(require('../pages/login/login'))
+  })  
+}
+
 export const routes = [
 	{
 		path: '/', 
@@ -100,6 +106,17 @@ export const routes = [
 			path: 'userAddress',
 			title:'收货地址',
 			hasHeader: false,
+			hasTabbar: false
+		}
+	},
+	{
+		path: '/login', 
+		name: 'login',   
+		component: login,
+		meta: {
+			path: 'login',
+			title:'登录',
+			hasHeader: true,
 			hasTabbar: false
 		}
 	},
