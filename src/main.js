@@ -41,14 +41,14 @@ const router = new VueRouter({
 //	}
 })
 
-//router.beforeEach((to,from,next)=>{
-//	if(from.meta.path == 'index'){
-//		var scrollT=document.documentElement.scrollTop || document.body.scrollTop;
-//		window.sessionStorage.setItem('we_scroll',scrollT);
-//	}
-//	
-//	next();
-//})
+router.beforeEach((to,from,next) => {
+	if(to.meta.auth && !store.state.userInfo.name && !store.state.userInfo.phone){
+		next({path:'/login'});
+		return;
+	}
+	
+	next();
+})
 const app = new Vue({
     router,
     store,

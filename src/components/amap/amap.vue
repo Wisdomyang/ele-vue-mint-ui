@@ -89,16 +89,21 @@ export default{
             })
             
         },
-        regeocoder(){   
-            this.map.plugin('AMap.Geocoder', () => {
-                this.geocoder = new AMap.Geocoder({
-                    radius: 1000,
-                    extensions: "all"
+        regeocoder(){ 
+            return new Promise((resolve,reject) => {
+                this.map.plugin('AMap.Geocoder', () => {
+                    this.geocoder = new AMap.Geocoder({
+                        radius: 1000,
+                        extensions: "all"
+                    });
+                    resolve(this.geocoder);
                 });
-            });
+                
+            })  
+            
         },
         getAddress(lnglatXY){
-            this.geocoder.getAddress(lnglatXY, (status, result) => {
+            this.geocoder && this.geocoder.getAddress(lnglatXY, (status, result) => {
                 if (status === 'complete' && result.info === 'OK') {
                     this.$store.dispatch('setPositionResult',result.regeocode)  // 还是要向外传递地址
                 }
@@ -109,7 +114,7 @@ export default{
             return new Promise((resolve,reject) => {
                 this.map.plugin('AMap.PlaceSearch', () => {
                     this.placeSearch = new AMap.PlaceSearch({
-                        city: 1000,
+                        city: city,
                         citylimit: true
                     });
                     resolve(this.placeSearch);
@@ -119,9 +124,8 @@ export default{
         },
 
         getSearchNearBy(param){
-            this.placeSearch.searchNearBy('',param.position,1000,(status, result) => {
+            this.placeSearch && this.placeSearch.searchNearBy('',param.position,1000,(status, result) => {
                 if (status === 'complete' && result.info === 'OK') {
-                    console.log(result)
                     this.$store.dispatch('setPositionSearchNearBy',result.poiList.pois);
                 }
             });
@@ -131,40 +135,51 @@ export default{
     watch: {
         again(newV){
             this.position().then(res => {
-                this.getSearchNearBy(res);
+                if(this.placeSearch){
+                    this.placeSearch.setCity(res.addressComponent.citycode)
+                    this.getSearchNearBy(res);
+                }else{
+                    this.rePlaceSearch(res.addressComponent.citycode).then(resp => {
+                        this.getSearchNearBy(res);
+                    });
+                }
+                
             }).catch(err => {
                 console.log(err);
             });
         },
         positionPlaceSearch(newV){
             this.positionResult && this.getSearchNearBy(this.positionResult);
-            
         },
         $route(to){
             if(to.meta.path === 'confirmAddress'){
                 if(this.address){  // 父组件传入的经纬度， 没有则用展示定位的地址
                 }else{
-                    
                     this.map.setCenter(this.positionResult.position);
                 }
-                this.regeocoder();
+                
                 let centerMarker = new AMap.Marker({
                     map: this.map,
                     position: this.map.getCenter(),
                     content:'<i class="iconfont icon-dingwei" style="color:#26a2ff;font-size:26px;"></i>'     
                 });   
-                AMap.event.addListener(this.map,'moveend',() => {
-                    let pos = this.map.getCenter();
-                    centerMarker.setPosition([pos.lng,pos.lat])
-                    this.getAddress([pos.lng,pos.lat])
-                })   
+                this.regeocoder().then(res => {
+                    AMap.event.addListener(this.map,'moveend',() => {
+                        let pos = this.map.getCenter();
+                        centerMarker.setPosition([pos.lng,pos.lat])
+                        this.getAddress([pos.lng,pos.lat])
+                    })   
+                });
+                
             }
         }
     },
     mounted () {
         this.create().then(map => {
-            this.position();
-            this.rePlaceSearch();
+            this.position().then(res => {
+                this.rePlaceSearch(res.addressComponent.citycode);
+            });
+            
         });
     }
 	

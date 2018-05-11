@@ -106,7 +106,8 @@ export const routes = [
 			path: 'userAddress',
 			title:'收货地址',
 			hasHeader: false,
-			hasTabbar: false
+			hasTabbar: false,
+			auth: true
 		}
 	},
 	{

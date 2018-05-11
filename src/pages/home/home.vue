@@ -6,7 +6,7 @@
 				<span>{{`${this.positionResult? this.positionResult.addressComponent.street: ''}${this.positionResult? this.positionResult.addressComponent.streetNumber: ''}`}}</span>
 			</router-link>
 		</section>
-		<mt-swipe class="home_swiper">
+		<mt-swipe class="home_swiper" :auto="0">
 			<mt-swipe-item v-for="category in categoryList">
 				<div class="category_container" v-for="item in category.goodList" :key="item.id">
 					<div class="img_box">

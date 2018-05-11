@@ -1,8 +1,8 @@
 <template>
 	<div class="login">
 		<section class="form">
-			<mt-field class="input" placeholder="手机号码" v-model="phone" name="phone" v-validate="{rules: { required: true, regex : /^[1][34578][0-9]{9}$/,max:11}}"></mt-field>
-			<mt-field class="input" placeholder="密码" v-model="password" type="password" v-validate="{rules: { required: true, regex : /^[a-zA-Z0-9_~!]{6,20}$/,max:20}}" name="password"></mt-field>
+			<mt-field class="input" placeholder="手机号码" v-model="phone" name="phone" v-validate="{rules: { required: true, regex : /^[1][34578][0-9]{9}$/,max:11,min:1}}"></mt-field>
+			<mt-field class="input" placeholder="密码" v-model="password" type="password" v-validate="{rules: { required: true, regex : /^[a-zA-Z0-9_~!]{6,20}$/,max:20,min:1}}" name="password"></mt-field>
 		</section>
 
 		<div class="save">
