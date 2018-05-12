@@ -3,10 +3,10 @@
 		<section class="header">
 			<router-link tag="div" :to="{path: 'chooseAddress'}">
 				<i class="iconfont">&#xe61e;</i>
-				<span>深圳</span>
+				<span>{{`${this.positionResult? this.positionResult.addressComponent.street: ''}${this.positionResult? this.positionResult.addressComponent.streetNumber: ''}`}}</span>
 			</router-link>
 		</section>
-		<mt-swipe class="home_swiper">
+		<mt-swipe class="home_swiper" :auto="0">
 			<mt-swipe-item v-for="category in categoryList">
 				<div class="category_container" v-for="item in category.goodList" :key="item.id">
 					<div class="img_box">
@@ -57,39 +57,34 @@
 
 <script>
 import { Toast,Indicator } from 'mint-ui';
-import {ajax} from "../../common/ajaxUtils/ajax";
+import { homeService } from './home.service';
 import {data} from "../../mock";
+import {mapActions,mapGetters} from 'vuex';
 export default {
 	data () {
 		return {
-			title: '深圳',
+			title: '',
 			categoryList: []
-			
 		}
 	},
-	methods: {
-		
+	computed: {
+		...mapGetters({
+			positionResult: 'positionResult'
+		})  
 	},
-	mounted (){
-		
-		ajax.get('swiperList').then(res => {
+	methods: {
+		getCategoryList(){
 			
-			this.categoryList = res.data.swiperItem;
-		})
-		
-
-		
-	}
+			homeService.getCategoryList().then(res => {
+				this.categoryList = res.data.swiperItem;
+			});
+		}
+	},
+	created () {
+		this.getCategoryList();
+	} 
 }
 </script>
-
-<style type="text/css">
-
-.mint-swipe-indicator.is-active{
-	background: #26a2ff;
-	opacity: 1;
-}
-</style>
 
 <style lang="scss" scoped>
 @import '../../assets/css/mixin';

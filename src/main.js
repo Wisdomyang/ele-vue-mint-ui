@@ -5,6 +5,9 @@ import App from './App'
 import MintUI from 'mint-ui'
 import VueRouter from 'vue-router'
 import axios from "axios"
+import Vuex from 'vuex'
+import VeeValidate from 'vee-validate'
+import store from './vuex/index';
 import {routes} from './router/routerConfig'
 import './assets/css/common'
 import './assets/css/style'
@@ -14,6 +17,13 @@ import './config/rem'
 Vue.config.productionTip = false
 Vue.use(MintUI)
 Vue.use(VueRouter)
+const veeValidateConfig = {
+	delay: 0,
+	// locale: 'zh_CN',
+	messages: null,
+	strict: true
+};
+Vue.use(VeeValidate,veeValidateConfig);
 /* eslint-disable no-new */
 const router = new VueRouter({
     mode: 'history', // 去掉hash模式
@@ -31,15 +41,16 @@ const router = new VueRouter({
 //	}
 })
 
-//router.beforeEach((to,from,next)=>{
-//	if(from.meta.path == 'index'){
-//		var scrollT=document.documentElement.scrollTop || document.body.scrollTop;
-//		window.sessionStorage.setItem('we_scroll',scrollT);
-//	}
-//	
-//	next();
-//})
+router.beforeEach((to,from,next) => {
+	if(to.meta.auth && !store.state.userInfo.name && !store.state.userInfo.phone){
+		next({path:'/login'});
+		return;
+	}
+	
+	next();
+})
 const app = new Vue({
-	router,
+    router,
+    store,
 	render:h => h(App)
 }).$mount('#app')

@@ -1,14 +1,21 @@
 <template>
 	<div class="choose-address">
+		<mt-header :title="title">
+			<i class="iconfont" style="color: #fff" slot="left" @click="goback()">&#xe682;</i>
+			<router-link tag="span" :to="{path: 'userAddress'}" style="color: #fff;font-size: 16px" slot="right">
+				地址管理
+			</router-link>
+		</mt-header>
 		<section class="search">
-			<mt-search style="height: 100%" v-model="value" placeholder="请输入地址" cancel-text=""></mt-search>
+			<position-search :isShowCell="false" :isShowBack="false" @click.native="goPage()"></position-search>
 			<div class="current-address">
 				<div class="title">当前地址</div>
 				<div class="address">
-					<span>新中泰商务大厦</span>
-					<div>
+					<span>{{`${this.positionResult? this.positionResult.addressComponent.street: ''}`}}</span>
+					<div @click="posAgain()">
 						<i class="iconfont">&#xe786;</i>
-						<span>重新定位</span>
+						<span v-show="positionStatus !== 'positioning'">重新定位</span>
+						<span v-show="positionStatus === 'positioning'">定位中...</span>
 					</div>
 				</div>
 			</div>
@@ -17,51 +24,29 @@
 		<section class="user-address">
 			<div class="title">收货地址</div>
 			<!-- 未登陆 -->
-			<div class="login-out" v-if="false">
+			<div class="login-out" v-if="!userName">
 				<span>登陆后使用常用的收货地址</span>
-				<i>登陆</i>
+				<router-link tag="i" :to="{path: 'login'}">
+					登录
+				</router-link>
 			</div>
 			<!-- 已登陆 -->
-
-			<ul class="login-in">
-				<li>
-					<div class="address">地方</div>
-					<div class="street">开始可就是快乐飞机</div>
-					<div class="user-info">
-						<span>看世界的恐惧</span><i>可敬可嘉看</i>
-					</div>
-				</li>
-				<li>
-					<div class="address">地方</div>
-					<div class="street">开始可就是快乐飞机</div>
-					<div class="user-info">
-						<span>看世界的恐惧</span><i>可敬可嘉看</i>
-					</div>
-				</li>
-			</ul>
-
-			<div class="add-address">
+			<user-address :isShowEdit="false" v-if="userName"></user-address>
+			<router-link tag="div" class="add-address" :to="{path: 'addAndEditAddress'}" v-if="userName">
 				<span>新增地址</span>
 				<i class="iconfont">&#xe74e;</i>
-			</div>
+			</router-link>
 		</section>
 		
-
-		<section class="near-place">
+		<section class="near-place" v-show="positionStatus !== 'positioning'">
 			<div class="title">
 				<div class="text">附近地点推荐</div>
-				<div class="more">
+				<router-link tag="div" class="more" :to="{path: 'searchAddress'}">
 					<span>更多</span><i class="iconfont">&#xe74e;</i>
-				</div>
+				</router-link>
 			</div>
 			<ul class="content">
-				<li>附近地点推荐</li>
-				<li>推荐</li>
-				<li>地点推荐</li>
-				<li>附近地点推荐</li>
-				<li>地点推荐</li>
-				<li>附近地点推荐</li>
-
+				<li  v-for="item in positionSearchNearBy" :key="item.id">{{item.name}}</li>
 			</ul>
 		</section>
 	</div>
@@ -69,45 +54,71 @@
 
 <script>
 import { Toast,Indicator } from 'mint-ui';
-import {ajax} from "../../../common/ajaxUtils/ajax";
-
+import positionSearch from '../../../components/position-search/position-search';
+import userAddress from '../../../components/user-address/user-address';
+import { appUtils } from '../../../common/utils/appUtils';
+import { mapGetters,mapActions } from 'vuex';
+import { AMapService } from '../../../common/class/amap'
 export default {
 	data () {
 		return {
-			value: ''
-			
+			title: '选择服务地址',
+			aMapService: new AMapService(window.app_map,window.app_geolocation,window.app_geocoder,window.app_placeSearch,window.app_marker)
 		}
 	},
+	components: {
+		positionSearch,
+		userAddress
+	},
+	computed: {
+		...mapGetters({
+			positionResult: 'positionResult',
+			positionStatus: 'positionStatus',
+			userName: 'userName',
+			positionSearchNearBy: 'positionSearchNearBy'
+		})  
+	},
 	methods: {
-		
+		...mapActions([
+			'setPositionStatus',
+			'setPositionSearchNearBy'
+		]),
+		// 重新定位
+		posAgain(){
+			this.$store.dispatch('setPositionStatus','positioning');
+			this.aMapService.getCurrentPosition().then(res => {
+				this.$store.dispatch('setPositionStatus','success');
+				this.aMapService.placeSearch && this.aMapService.placeSearch.setCity(res.addressComponent.citycode);
+				this.aMapService.getSearchNearBy('',res).then(resp => {
+					this.$store.dispatch('setPositionSearchNearBy',resp.poiList.pois);
+				}).catch(err => {
+					console.log(err);
+					Toast('获取附近地址失败');
+				})
+			}).catch(err => {
+				console.log(err);
+				this.$store.dispatch('setPositionStatus','fail');
+				Toast('定位失败');
+			})
+		},
+		goPage(){
+			this.$router.push('searchAddress');
+		},
+		goback(){
+			appUtils.goBack();
+		}
 	},
 	mounted (){
-		
-		
-
-		
+		// 首页本不需要定位  他应该是用户选择的地址    getSearchNearBy改为getAddress方法
+		this.aMapService.getSearchNearBy('',this.positionResult).then(res => {
+			this.$store.dispatch('setPositionSearchNearBy',res.poiList.pois);
+		}).catch(err => {
+			console.log(err);
+			Toast('获取附近地址失败');
+		})
 	}
 }
 </script>
-
-<style lang="scss">
-.mint-searchbar{
-	background-color: #fff;
-	.mint-searchbar-inner{
-		background-color: #f0f0f0;
-		border-radius: .24rem;
-		i{
-			font-size: 14px;
-			padding-right: .12rem;
-		}
-		input{
-			background-color: #f0f0f0;
-		}
-	}
-}
-</style>
-
-
 
 <style lang="scss" scoped>
 @import '../../../assets/css/mixin';
