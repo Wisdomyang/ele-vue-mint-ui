@@ -6,22 +6,24 @@
 				&#xe612;
 			</router-link>
 		</mt-header>
-		<section class="footer" v-show="address">
+		<section class="footer" v-show="userInfo">
 			<ul class="movend-address">
 				<li>
 					<i class="iconfont">&#xe61e;</i>
 					<div>
-						<span>{{`${address ? address.addressComponent.street: null}${address ?address.addressComponent.streetNumber: null}`}}</span>
-						<i class="iconfont" style="color: #d7d7d7;">&#xe74e;</i>
+						<span>{{street}}</span>
+						<router-link tag="i" :to="{path: 'searchAddress'}" class="iconfont" style="color: #d7d7d7;">
+							&#xe74e;
+						</router-link>
 					</div>
 				</li>
 				<li>
 					<i></i>
-					<span class="ellipsis">{{address ? address.formattedAddress : null}}</span>
+					<span class="ellipsis">{{formattedAddress}}</span>
 				</li>
 			</ul>
 			<div class="save">
-				<mt-button class="btn" @click="positionAgianFun()">确定</mt-button>
+				<mt-button class="btn" @click="confirm()">确定</mt-button>
 			</div>
 		</section>
 	</div>
@@ -37,7 +39,9 @@ export default {
 		return {
 			title: '确认收货地址',
 			aMapService: new AMapService(window.app_map,window.app_geolocation,window.app_geocoder,window.app_placeSearch,window.app_marker),
-			address: null
+			userInfo: {},
+			street: '',
+			formattedAddress: ''
 		}
 	},
 	computed: {
@@ -49,25 +53,37 @@ export default {
 		...mapActions([
             'setPositionResult'
 		]),
-		positionAgianFun(){
-			
+		confirm(){
+			this.$router.push({name: 'addAndEditAddress',query: {userInfo: JSON.stringify(this.userInfo)}})
 		},
 		goback(){
 			appUtils.goBack();
 		}
 	},
 	mounted (){
-		if(this.address){  // 父组件传入的经纬度， 没有则用展示定位的地址
+		this.userInfo = JSON.parse(this.$route.query.userInfo);
+		if(this.$route.query.userInfo.address){
+			this.street = `${this.userInfo.address.addressComponent.street}${this.userInfo.address.addressComponent.streetNumber}`;
+			this.formattedAddress = this.userInfo.address.formattedAddress;
+			this.aMapService.map.setCenter(this.userInfo.address.position);
 		}else{
 			this.positionResult && this.aMapService.map.setCenter(this.positionResult.position);
-			this.address = this.positionResult ? this.positionResult: null
+			this.userInfo.address = this.positionResult ? this.positionResult: null;
+			this.street = `${this.userInfo.address.addressComponent.street}${this.userInfo.address.addressComponent.streetNumber}`;
+			this.formattedAddress = this.userInfo.address.formattedAddress;
 		}
 		Promise.all([this.aMapService.createMarker(),this.aMapService.reGeocoder()]).then(() => {
 			this.aMapService.bindEvent('moveend',() => {
 				let pos = this.aMapService.map.getCenter();
 				this.aMapService.marker.setPosition([pos.lng,pos.lat])
 				this.aMapService.getAddress([pos.lng,pos.lat]).then(res => {
-					this.address = res.regeocode;
+					this.userInfo.address = {
+						position: pos,
+						addressComponent: res.regeocode.addressComponent,
+						formattedAddress: res.regeocode.formattedAddress
+					} 
+					this.street = `${this.userInfo.address.addressComponent.street}${this.userInfo.address.addressComponent.streetNumber}`;
+					this.formattedAddress = this.userInfo.address.formattedAddress;
 				})
 			})
 		}).catch(err => {

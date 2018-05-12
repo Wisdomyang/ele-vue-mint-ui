@@ -1,6 +1,6 @@
 <template>
 	<div class="st-radio">
-		<div class="radia-core" v-for="item in options">
+		<div class="radia-core" v-for="(item,index) in options" :key="index">
 			<span class="circle" :class="{'active':result == item.value}">
 				{{item.label}}
 			</span>
@@ -14,6 +14,11 @@ export default{
 	data(){
 		return {
 			result: this.init
+		}
+	},
+	watch: {
+		init(newV){
+			this.result = newV;
 		}
 	},
 	props:['options','name','init'],

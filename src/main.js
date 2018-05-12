@@ -9,6 +9,7 @@ import Vuex from 'vuex'
 import VeeValidate from 'vee-validate'
 import store from './vuex/index';
 import {routes} from './router/routerConfig'
+import { storageUtils } from './common/utils/storageUtils'
 import './assets/css/common'
 import './assets/css/style'
 import './assets/css/animate'
@@ -42,7 +43,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to,from,next) => {
-	if(to.meta.auth && !store.state.userInfo.name && !store.state.userInfo.phone){
+	if(to.meta.auth && !storageUtils.getSessionStorage('userName') && !storageUtils.getSessionStorage('userPhone')){
 		next({path:'/login'});
 		return;
 	}
