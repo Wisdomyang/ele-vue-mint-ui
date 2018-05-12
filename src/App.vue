@@ -1,7 +1,6 @@
 <template>
   <div id="app">
-    
-    <amap :again="positionAgain" :positionPlaceSearch="positionPlaceSearch" :isShow="$route.meta.path === 'confirmAddress'? true : false" :amapId="'appAmap'"></amap>
+    <div id="appAmap" v-show="$route.meta.path === 'confirmAddress'? true : false" style="width: 100%;height: 100%;position: absolute;top: 0;left: 0;z-index: 1"></div>
     <!-- 定位中的动画 -->
     <section class="positioning" v-if="positionStatus === 'positioning' && $route.meta.path === 'home'">
       定位中。。
@@ -31,9 +30,10 @@
 </template>
 
 <script>
-import { appUtils } from './common/appUtils';
-import amap from './components/amap/amap';
+import { Toast,Indicator } from 'mint-ui';
+import { appUtils } from './common/utils/appUtils';
 import {mapActions,mapGetters} from 'vuex';
+import { AMapService } from './common/class/amap';
 export default {
   name: 'app',
   data (){
@@ -58,22 +58,21 @@ export default {
         name: '我的',
         id: 3,
         icon: '&#xe60e;'
-      }]
+      }],
+      aMapService: new AMapService(window.app_map,window.app_geolocation,window.app_geocoder,window.app_placeSearch,window.app_marker)
     }
-  },
-  components: {
-      amap
   },
   computed: {
     ...mapGetters({
       positionResult: 'positionResult',
-      positionStatus: 'positionStatus',
-      positionAgain: 'positionAgain',
-      positionPlaceSearch: 'positionPlaceSearch'
+      positionStatus: 'positionStatus'
 		})  
   },
   methods: {
-   
+    ...mapActions([
+      'setPositionResult',
+      'setPositionStatus'
+		]),
     tabSelected(item){
       item.path && this.$router.push(item.path)
     },
@@ -99,11 +98,23 @@ export default {
       // }
       
     }
-
-
   },
   mounted () {
-   
+    this.aMapService.create('appAmap').then(map => {
+      this.aMapService.rePosition().then(g => {
+          this.$store.dispatch('setPositionStatus','positioning');
+          this.aMapService.getCurrentPosition().then(res => {
+              this.$store.dispatch('setPositionStatus','success');
+              this.$store.dispatch('setPositionResult',res);
+              this.aMapService.rePlaceSearch(res.addressComponent.citycode);
+          }).catch(err => {
+              this.$store.dispatch('setPositionStatus','fail');
+              this.aMapService.map.setZoomAndCenter(18,[116.396749,39.918055]);
+              Toast('定位失败');
+          })
+      });
+        
+    });
   }
 }
 </script>

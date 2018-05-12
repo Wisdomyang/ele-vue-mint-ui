@@ -41,7 +41,6 @@
 <script>
 import { Toast,Indicator } from 'mint-ui';
 import stRadio from '../../../components/radio/radio';
-import {ajax} from "../../../common/ajax";
 export default {
 	data () {
 		return {

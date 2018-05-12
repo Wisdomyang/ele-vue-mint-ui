@@ -54,15 +54,16 @@
 
 <script>
 import { Toast,Indicator } from 'mint-ui';
-import {ajax} from "../../../common/ajax";
 import positionSearch from '../../../components/position-search/position-search';
 import userAddress from '../../../components/user-address/user-address';
-import { appUtils } from '../../../common/appUtils';
+import { appUtils } from '../../../common/utils/appUtils';
 import { mapGetters,mapActions } from 'vuex';
+import { AMapService } from '../../../common/class/amap'
 export default {
 	data () {
 		return {
-			title: '选择服务地址'
+			title: '选择服务地址',
+			aMapService: new AMapService(window.app_map,window.app_geolocation,window.app_geocoder,window.app_placeSearch,window.app_marker)
 		}
 	},
 	components: {
@@ -73,21 +74,32 @@ export default {
 		...mapGetters({
 			positionResult: 'positionResult',
 			positionStatus: 'positionStatus',
-			positionAgain: 'positionAgain',
 			userName: 'userName',
-			positionPlaceSearch: 'positionPlaceSearch',
 			positionSearchNearBy: 'positionSearchNearBy'
 		})  
 	},
 	methods: {
 		...mapActions([
-            'setPositionResult',
 			'setPositionStatus',
-			'setPositionAgain',
-			'setPositionPlaceSearch'
+			'setPositionSearchNearBy'
 		]),
+		// 重新定位
 		posAgain(){
-			this.$store.dispatch('setPositionAgain',!this.positionAgain)
+			this.$store.dispatch('setPositionStatus','positioning');
+			this.aMapService.getCurrentPosition().then(res => {
+				this.$store.dispatch('setPositionStatus','success');
+				this.aMapService.placeSearch && this.aMapService.placeSearch.setCity(res.addressComponent.citycode);
+				this.aMapService.getSearchNearBy('',res).then(resp => {
+					this.$store.dispatch('setPositionSearchNearBy',resp.poiList.pois);
+				}).catch(err => {
+					console.log(err);
+					Toast('获取附近地址失败');
+				})
+			}).catch(err => {
+				console.log(err);
+				this.$store.dispatch('setPositionStatus','fail');
+				Toast('定位失败');
+			})
 		},
 		goPage(){
 			this.$router.push('searchAddress');
@@ -97,11 +109,16 @@ export default {
 		}
 	},
 	mounted (){
-		this.$store.dispatch('setPositionPlaceSearch',!this.positionPlaceSearch)
+		// 首页本不需要定位  他应该是用户选择的地址    getSearchNearBy改为getAddress方法
+		this.aMapService.getSearchNearBy('',this.positionResult).then(res => {
+			this.$store.dispatch('setPositionSearchNearBy',res.poiList.pois);
+		}).catch(err => {
+			console.log(err);
+			Toast('获取附近地址失败');
+		})
 	}
 }
 </script>
-
 
 <style lang="scss" scoped>
 @import '../../../assets/css/mixin';

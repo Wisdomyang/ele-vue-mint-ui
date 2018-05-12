@@ -6,19 +6,18 @@
 				&#xe612;
 			</router-link>
 		</mt-header>
-		<!-- <amap :again="positionAgian" :isShow="true" :amapId="'confirm-address'"></amap> -->
-		<section class="footer" v-show="this.positionResult">
+		<section class="footer" v-show="address">
 			<ul class="movend-address">
 				<li>
 					<i class="iconfont">&#xe61e;</i>
 					<div>
-						<span>{{`${this.positionResult? this.positionResult.addressComponent.street: ''}${this.positionResult? this.positionResult.addressComponent.streetNumber: ''}`}}</span>
+						<span>{{`${address ? address.addressComponent.street: null}${address ?address.addressComponent.streetNumber: null}`}}</span>
 						<i class="iconfont" style="color: #d7d7d7;">&#xe74e;</i>
 					</div>
 				</li>
 				<li>
 					<i></i>
-					<span class="ellipsis">{{`${this.positionResult? this.positionResult.formattedAddress: ''}`}}</span>
+					<span class="ellipsis">{{address ? address.formattedAddress : null}}</span>
 				</li>
 			</ul>
 			<div class="save">
@@ -30,17 +29,15 @@
 
 <script>
 import { Toast,Indicator } from 'mint-ui';
-import {ajax} from "../../../common/ajax";
-import amap from '../../../components/amap/amap';
-import { appUtils } from '../../../common/appUtils';
+import { appUtils } from '../../../common/utils/appUtils';
 import {mapActions,mapGetters} from 'vuex';
+import { AMapService } from '../../../common/class/amap';
 export default {
 	data () {
 		return {
 			title: '确认收货地址',
-			street: '',
-			formattedAddress: '',
-			positionAgian: false
+			aMapService: new AMapService(window.app_map,window.app_geolocation,window.app_geocoder,window.app_placeSearch,window.app_marker),
+			address: null
 		}
 	},
 	computed: {
@@ -48,10 +45,10 @@ export default {
 			positionResult: 'positionResult'
 		})  
 	},
-	components: {
-		amap
-	},
 	methods: {
+		...mapActions([
+            'setPositionResult'
+		]),
 		positionAgianFun(){
 			
 		},
@@ -60,7 +57,22 @@ export default {
 		}
 	},
 	mounted (){
-		
+		if(this.address){  // 父组件传入的经纬度， 没有则用展示定位的地址
+		}else{
+			this.positionResult && this.aMapService.map.setCenter(this.positionResult.position);
+			this.address = this.positionResult ? this.positionResult: null
+		}
+		Promise.all([this.aMapService.createMarker(),this.aMapService.reGeocoder()]).then(() => {
+			this.aMapService.bindEvent('moveend',() => {
+				let pos = this.aMapService.map.getCenter();
+				this.aMapService.marker.setPosition([pos.lng,pos.lat])
+				this.aMapService.getAddress([pos.lng,pos.lat]).then(res => {
+					this.address = res.regeocode;
+				})
+			})
+		}).catch(err => {
+			console.log(err)
+		})
 	}
 }
 </script>

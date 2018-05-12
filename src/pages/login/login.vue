@@ -14,7 +14,7 @@
 <script>
 import { Toast,Indicator } from 'mint-ui';
 import {mapActions,mapGetters} from 'vuex';
-import { appUtils } from '../../common/appUtils';
+import { appUtils } from '../../common/utils/appUtils';
 export default {
 	data () {
 		return {
