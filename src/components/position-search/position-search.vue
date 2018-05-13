@@ -11,12 +11,20 @@
 					</div>
 				</div>
 			</mt-cell>
-			<mt-cell v-for="(item,index) in positionSearchNearBy" v-if="showCell" @click.native="goPage(item)">
+			<mt-cell v-for="(item,index) in searchResult" v-if="showCell && searchResult.length > 0" @click.native="goPage(item)">
 				<div class="content">
 					<i></i>
 					<div>
 						<p>{{item.name}}</p>
 						<p class="ellipsis">{{item.address}}</p>
+					</div>
+				</div>
+			</mt-cell>
+			<mt-cell v-if="showCell && searchResult.length == 0">
+				<div class="content">
+					<i></i>
+					<div>
+						搜索无结果
 					</div>
 				</div>
 			</mt-cell>
@@ -36,20 +44,59 @@ export default{
 			value: '',
 			canceText: '取消',
 			showCell: true,
-			aMapService: new AMapService(window.app_map,window.app_geolocation,window.app_geocoder,window.app_placeSearch,window.app_marker),
+			aMapService: new AMapService(window.app_map,window.app_geolocation,window.app_geocoder,window.app_placeSearch,window.app_marker,window.app_autocomplete),
 			userInfo: {},
-			address: null
+			address: null,
+			searchResult: []
 		}
 	},
 	props:['isShowCell','isShowBack'],
 	watch: {
 		value(newV){
-			this.aMapService.getSearchNearBy(newV,this.address.position,50000).then(res => {
+			if(newV === ''){
+				this.address && this.aMapService.getSearchNearBy(newV,this.address.position,50000).then(res => {
 					this.$store.dispatch('setPositionSearchNearBy',res.poiList.pois);
-			}).catch(err => {
-				console.log(err);
-				Toast('获取附近地址失败');
-			})
+					this.searchResult = res.poiList.pois;
+				}).catch(err => {
+					console.log(err);
+					Toast('获取附近地址失败');
+				})
+			}else{
+				this.aMapService.getAutocompleteSearch(newV).then(res => {
+					this.searchResult = [];
+					for(let item of res.tips){
+						if(item.location){
+							if(item.address instanceof Array){
+								if(item.address.length > 0){
+									this.searchResult.push({
+										name: item.name,
+										address: `${item.district}${item.address[0]}`,
+										location: item.location
+									})
+								}else{
+									this.searchResult.push({
+										name: item.name,
+										address: `${item.district}`,
+										location: item.location
+									})
+								}
+							}
+							if(typeof (item.address) == 'string'){
+								this.searchResult.push({
+									name: item.name,
+									address: `${item.district}${item.address}`,
+									location: item.location
+								})
+							}
+						}
+						
+					}
+				}).catch(err => {
+					console.log(err);
+					Toast('搜索无结果');
+					this.searchResult = [];
+				})
+			}
 		}
 	},
 	computed: {
@@ -68,30 +115,15 @@ export default{
 				if(!item){
 					this.$router.push({name: 'confirmAddress',query: {userInfo: JSON.stringify(this.userInfo)}})
 				}else{
-					if(this.aMapService.geocoder){
-						this.aMapService.getAddress(item.location).then(res => {
-							this.userInfo.address = {
-								position: item.location,
-								addressComponent: res.regeocode.addressComponent,
-								formattedAddress: item.address
-							} 
-							this.userInfo.address.addressComponent.street = item.address;
-							this.$router.push({name: 'confirmAddress',query: {userInfo: JSON.stringify(this.userInfo)}})
-						})
-					}else{
-						this.aMapService.reGeocoder().then(res => {
-							this.aMapService.getAddress(item.location).then(res => {
-									this.userInfo.address = {
-									position: item.location,
-									addressComponent: res.regeocode.addressComponent,
-									formattedAddress: item.address
-								} 
-								this.userInfo.address.addressComponent.street = item.address;
-								this.$router.push({name: 'confirmAddress',query: {userInfo: JSON.stringify(this.userInfo)}})
-							})
-						})
-					}
-					
+					this.aMapService.getAddress(item.location).then(res => {
+						this.userInfo.address = {
+							position: item.location,
+							addressComponent: res.regeocode.addressComponent,
+							formattedAddress: item.address
+						} 
+						this.userInfo.address.addressComponent.street = item.address;
+						this.$router.push({name: 'confirmAddress',query: {userInfo: JSON.stringify(this.userInfo)}})
+					})
 					
 				}
 			}else{
@@ -99,33 +131,15 @@ export default{
 					this.$store.dispatch('setUserSelectAddress',this.positionResult)
 					this.$router.push({name: 'home'});
 				}else{
-					if(this.aMapService.geocoder){
-						this.aMapService.getAddress(item.location).then(res => {
-							let obj = {
-								position: item.location,
-								addressComponent: res.regeocode.addressComponent,
-								formattedAddress: res.regeocode.formattedAddress
-							} 
-
-							this.$store.dispatch('setUserSelectAddress',obj)
-							this.$router.push({name: 'home'});
-						})
-					}else{
-						this.aMapService.reGeocoder().then(res => {
-							this.aMapService.getAddress(item.location).then(res => {
-								let obj = {
-									position: item.location,
-									addressComponent: res.regeocode.addressComponent,
-									formattedAddress: res.regeocode.formattedAddress
-								} 
-
-								this.$store.dispatch('setUserSelectAddress',obj)
-								this.$router.push({name: 'home'});
-							})
-						})
-					}
-					
-					
+					this.aMapService.getAddress(item.location).then(res => {
+						let obj = {
+							position: item.location,
+							addressComponent: res.regeocode.addressComponent,
+							formattedAddress: res.regeocode.formattedAddress
+						}
+						this.$store.dispatch('setUserSelectAddress',obj)
+						this.$router.push({name: 'home'});
+					})
 				}
 			}
 		},
@@ -142,48 +156,23 @@ export default{
 				this.userInfo = JSON.parse(this.$route.query.userInfo);
 				this.address = this.userInfo.address;
 				this.address.position = [this.address.position.lng,this.address.position.lat];
-				if(this.aMapService.placeSearch){
-					console.log(this.address.position)
+				this.aMapService.getSearchNearBy('',this.address.position).then(res => {
+					this.$store.dispatch('setPositionSearchNearBy',res.poiList.pois);
+					this.searchResult = res.poiList.pois;
+				}).catch(err => {
+					console.log(err);
+					Toast('获取附近地址失败');
+				})
+			}else{
+				if(this.positionResult){
+					this.address = this.positionResult;
 					this.aMapService.getSearchNearBy('',this.address.position).then(res => {
 						this.$store.dispatch('setPositionSearchNearBy',res.poiList.pois);
+						this.searchResult = res.poiList.pois;
 					}).catch(err => {
 						console.log(err);
 						Toast('获取附近地址失败');
 					})
-				}else{
-					// 保证引入PlaceSearch
-					this.aMapService.rePlaceSearch(this.address.addressComponent.citycode).then(res => {
-						this.aMapService.getSearchNearBy('',this.address.position).then(res => {
-							this.$store.dispatch('setPositionSearchNearBy',res.poiList.pois);
-						}).catch(err => {
-							console.log(err);
-							Toast('获取附近地址失败');
-						})
-					});
-				}
-				
-			}else{
-				if(this.positionResult){
-					this.address = this.positionResult;
-					if(this.aMapService.placeSearch){
-						console.log(this.positionResult.position)
-						this.aMapService.getSearchNearBy('',this.positionResult.position).then(res => {
-							this.$store.dispatch('setPositionSearchNearBy',res.poiList.pois);
-						}).catch(err => {
-							console.log(err);
-							Toast('获取附近地址失败');
-						})
-					}else{
-						// 保证引入PlaceSearch
-						this.aMapService.rePlaceSearch(this.positionResult.addressComponent.citycode).then(res => {
-							this.aMapService.getSearchNearBy('',this.positionResult.position).then(res => {
-								this.$store.dispatch('setPositionSearchNearBy',res.poiList.pois);
-							}).catch(err => {
-								console.log(err);
-								Toast('获取附近地址失败');
-							})
-						});
-					}
 				}
 				
 			}

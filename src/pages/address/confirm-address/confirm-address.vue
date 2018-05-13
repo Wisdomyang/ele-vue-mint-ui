@@ -11,7 +11,7 @@
 				<li>
 					<i class="iconfont">&#xe61e;</i>
 					<div>
-						<span>{{street}}</span>
+						<span class="ellipsis">{{street}}</span>
 						<router-link tag="i" :to="{path: 'searchAddress',query: {userInfo: JSON.stringify(this.userInfo)}}" class="iconfont" style="color: #d7d7d7;">
 							&#xe74e;
 						</router-link>
@@ -38,7 +38,7 @@ export default {
 	data () {
 		return {
 			title: '确认收货地址',
-			aMapService: new AMapService(window.app_map,window.app_geolocation,window.app_geocoder,window.app_placeSearch,window.app_marker),
+			aMapService: new AMapService(window.app_map,window.app_geolocation,window.app_geocoder,window.app_placeSearch,window.app_marker,window.app_autocomplete),
 			userInfo: {},
 			street: '',
 			formattedAddress: ''
@@ -61,35 +61,34 @@ export default {
 		}
 	},
 	mounted (){
-		this.userInfo = JSON.parse(this.$route.query.userInfo);
-		if(this.userInfo){
-			console.log(this.userInfo)
-			this.street = `${this.userInfo.address.addressComponent.street}${this.userInfo.address.addressComponent.streetNumber}`;
-			this.formattedAddress = this.userInfo.address.formattedAddress;
-			this.aMapService.map.setCenter(this.userInfo.address.position);
-		}else{
-			this.positionResult && this.aMapService.map.setCenter(this.positionResult.position);
-			this.userInfo.address = this.positionResult ? this.positionResult: null;
-			this.street = `${this.userInfo.address.addressComponent.street}${this.userInfo.address.addressComponent.streetNumber}`;
-			this.formattedAddress = this.userInfo.address.formattedAddress;
-		}
-		Promise.all([this.aMapService.createMarker(),this.aMapService.reGeocoder()]).then(() => {
-			this.aMapService.bindEvent('moveend',() => {
-				let pos = this.aMapService.map.getCenter();
-				this.aMapService.marker.setPosition([pos.lng,pos.lat])
-				this.aMapService.getAddress([pos.lng,pos.lat]).then(res => {
-					this.userInfo.address = {
-						position: pos,
-						addressComponent: res.regeocode.addressComponent,
-						formattedAddress: res.regeocode.formattedAddress
-					} 
-					this.street = `${this.userInfo.address.addressComponent.street}${this.userInfo.address.addressComponent.streetNumber}`;
-					this.formattedAddress = this.userInfo.address.formattedAddress;
+		if(this.$route.query.userInfo){
+			this.userInfo = JSON.parse(this.$route.query.userInfo);
+			if(this.userInfo.address){
+				this.street = `${this.userInfo.address.addressComponent.street}${this.userInfo.address.addressComponent.streetNumber}`;
+				this.formattedAddress = this.userInfo.address.formattedAddress;
+				this.aMapService.map.setCenter(this.userInfo.address.position);
+			}else{
+				this.positionResult && this.aMapService.map.setCenter(this.positionResult.position);
+				this.userInfo.address = this.positionResult ? this.positionResult: null;
+				this.street = `${this.userInfo.address.addressComponent.street}${this.userInfo.address.addressComponent.streetNumber}`;
+				this.formattedAddress = this.userInfo.address.formattedAddress;
+			}
+			this.aMapService.createMarker().then(res => {
+				this.aMapService.bindEvent('moveend',() => {
+					let pos = this.aMapService.map.getCenter();
+					this.aMapService.marker.setPosition(pos)
+					this.aMapService.getAddress(pos).then(res => {
+						this.userInfo.address = {
+							position: pos,
+							addressComponent: res.regeocode.addressComponent,
+							formattedAddress: res.regeocode.formattedAddress
+						} 
+						this.street = `${this.userInfo.address.addressComponent.street}${this.userInfo.address.addressComponent.streetNumber}`;
+						this.formattedAddress = this.userInfo.address.formattedAddress;
+					})
 				})
 			})
-		}).catch(err => {
-			console.log(err)
-		})
+		}
 	}
 }
 </script>

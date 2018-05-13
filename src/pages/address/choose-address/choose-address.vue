@@ -12,7 +12,7 @@
 				<div class="title">当前地址</div>
 				<div class="address">
 					<span>{{`${this.positionResult? this.positionResult.addressComponent.street: ''}`}}</span>
-					<div @click="posAgain()">
+					<div @click="position()">
 						<i class="iconfont">&#xe786;</i>
 						<span v-show="positionStatus !== 'positioning'">重新定位</span>
 						<span v-show="positionStatus === 'positioning'">定位中...</span>
@@ -63,7 +63,7 @@ export default {
 	data () {
 		return {
 			title: '选择服务地址',
-			aMapService: new AMapService(window.app_map,window.app_geolocation,window.app_geocoder,window.app_placeSearch,window.app_marker)
+			aMapService: new AMapService(window.app_map,window.app_geolocation,window.app_geocoder,window.app_placeSearch,window.app_marker,window.app_autocomplete)
 		}
 	},
 	components: {
@@ -80,14 +80,16 @@ export default {
 	},
 	methods: {
 		...mapActions([
+			'setPositionResult',
 			'setPositionStatus',
 			'setPositionSearchNearBy'
 		]),
 		// 重新定位
-		posAgain(){
+		position(){
 			this.$store.dispatch('setPositionStatus','positioning');
 			this.aMapService.getCurrentPosition().then(res => {
 				this.$store.dispatch('setPositionStatus','success');
+				this.$store.dispatch('setPositionResult',res);
 				this.aMapService.placeSearch && this.aMapService.placeSearch.setCity(res.addressComponent.citycode);
 				this.aMapService.getSearchNearBy('',res.position).then(resp => {
 					this.$store.dispatch('setPositionSearchNearBy',resp.poiList.pois);
@@ -105,50 +107,27 @@ export default {
 			this.$router.push('searchAddress');
 		},
 		goHome(item){
-			if(this.aMapService.geocoder){
-				this.aMapService.getAddress(item.location).then(res => {
-					let obj = {
-						position: item.location,
-						addressComponent: res.regeocode.addressComponent,
-						formattedAddress: res.regeocode.formattedAddress
-					} 
-
-					this.$store.dispatch('setUserSelectAddress',obj)
-					this.$router.push({name: 'home'});
-				})
-			}else{
-				this.aMapService.reGeocoder().then(res => {
-					this.aMapService.getAddress(item.location).then(res => {
-						let obj = {
-							position: item.location,
-							addressComponent: res.regeocode.addressComponent,
-							formattedAddress: res.regeocode.formattedAddress
-						} 
-
-						this.$store.dispatch('setUserSelectAddress',obj)
-						this.$router.push({name: 'home'});
-					})
-				})
-			}
+			this.aMapService.getAddress(item.location).then(res => {
+				let obj = {
+					position: item.location,
+					addressComponent: res.regeocode.addressComponent,
+					formattedAddress: res.regeocode.formattedAddress
+				} 
+				this.$store.dispatch('setUserSelectAddress',obj)
+				this.$router.push({name: 'home'});
+			})
 		},
 		goback(){
 			appUtils.goBack();
 		}
 	},
 	mounted (){
-		if(this.aMapService.placeSearch){
-			this.positionResult && this.aMapService.getSearchNearBy('',this.positionResult.position).then(res => {
-				this.$store.dispatch('setPositionSearchNearBy',res.poiList.pois);
-			}).catch(err => {
-				console.log(err);
-				Toast('获取附近地址失败');
-			})
-		}else{
-			// 保证引入PlaceSearch
-			this.aMapService.rePlaceSearch(null);
-		}
-		// 首页本不需要定位  他应该是用户选择的地址    getSearchNearBy改为getAddress方法
-		
+		this.positionResult && this.aMapService.getSearchNearBy('',this.positionResult.position).then(res => {
+			this.$store.dispatch('setPositionSearchNearBy',res.poiList.pois);
+		}).catch(err => {
+			console.log(err);
+			Toast('获取附近地址失败');
+		})
 	}
 }
 </script>
