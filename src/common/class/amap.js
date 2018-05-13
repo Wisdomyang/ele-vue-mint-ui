@@ -114,9 +114,9 @@ export class AMapService {
         })
     }
 
-    getSearchNearBy(key,r){
+    getSearchNearBy(key,position){
         return new Promise((resolve,reject) => {
-            this.placeSearch && this.placeSearch.searchNearBy(key,r.position,1000,(status, result) => {
+            this.placeSearch && this.placeSearch.searchNearBy(key,position,1000,(status, result) => {
                 if (status === 'complete' && result.info === 'OK') {
                     console.log(result)
                     resolve(result);

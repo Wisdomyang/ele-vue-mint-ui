@@ -3,7 +3,8 @@ import { storageUtils } from '../../common/utils/storageUtils';
 const state = {
     name: '',
     phone: '',
-    addressList: []
+	addressList: [],
+	selectAddress: null
 }
 const mutations = {
 	[types.SET_USERNAME] (state, { result }) {
@@ -14,7 +15,7 @@ const mutations = {
 		state.phone = result;
 		storageUtils.setSessionStorage('userPhone',result);
 	},
-	[types.SET_USERPADDRESSLIST] (state, { result }) {
+	[types.SET_USERADDRESSLIST] (state, { result }) {
 		let userAddressList = storageUtils.getSessionStorage('userAddressList');
 		userAddressList ? state.addressList = userAddressList: state.addressList = [];
 		console.log(userAddressList)
@@ -33,7 +34,11 @@ const mutations = {
 		}
 		
 		storageUtils.setSessionStorage('userAddressList',state.addressList);
-	}	
+	},
+	[types.SET_USERSELECTADDRESS] (state, { result }) {
+		state.selectAddress = result;
+		storageUtils.setSessionStorage('userSelectAddress',result);
+	}
 	
 }
 export default {

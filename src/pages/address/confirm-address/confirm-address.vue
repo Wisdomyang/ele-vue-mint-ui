@@ -2,7 +2,7 @@
 	<div class="confirm-address">
 		<mt-header :title="title" fixed>
 			<i class="iconfont" style="color: #fff" slot="left" @click="goback()">&#xe682;</i>
-			<router-link tag="i" :to="{path: 'searchAddress'}" class="iconfont" style="color: #fff" slot="right">
+			<router-link tag="i" :to="{path: 'searchAddress',query: {userInfo: JSON.stringify(this.userInfo)}}" class="iconfont" style="color: #fff" slot="right">
 				&#xe612;
 			</router-link>
 		</mt-header>
@@ -12,7 +12,7 @@
 					<i class="iconfont">&#xe61e;</i>
 					<div>
 						<span>{{street}}</span>
-						<router-link tag="i" :to="{path: 'searchAddress'}" class="iconfont" style="color: #d7d7d7;">
+						<router-link tag="i" :to="{path: 'searchAddress',query: {userInfo: JSON.stringify(this.userInfo)}}" class="iconfont" style="color: #d7d7d7;">
 							&#xe74e;
 						</router-link>
 					</div>
@@ -62,7 +62,8 @@ export default {
 	},
 	mounted (){
 		this.userInfo = JSON.parse(this.$route.query.userInfo);
-		if(this.$route.query.userInfo.address){
+		if(this.userInfo){
+			console.log(this.userInfo)
 			this.street = `${this.userInfo.address.addressComponent.street}${this.userInfo.address.addressComponent.streetNumber}`;
 			this.formattedAddress = this.userInfo.address.formattedAddress;
 			this.aMapService.map.setCenter(this.userInfo.address.position);

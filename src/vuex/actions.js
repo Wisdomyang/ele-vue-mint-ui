@@ -24,5 +24,9 @@ export const setUserPhone = ({ commit },result) => {
 }
 
 export const setUserAddressList = ({ commit },result) => {
-    commit(types.SET_USERPADDRESSLIST,{result})
+    commit(types.SET_USERADDRESSLIST,{result})
+}
+
+export const setUserSelectAddress = ({ commit },result) => {
+    commit(types.SET_USERSELECTADDRESS,{result})
 }

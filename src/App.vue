@@ -100,6 +100,8 @@ export default {
     }
   },
   mounted () {
+
+    // 高德地图插件必须全部引入成功才行。保证后续逻辑的进行;
     this.aMapService.create('appAmap').then(map => {
       this.aMapService.rePosition().then(g => {
           this.$store.dispatch('setPositionStatus','positioning');

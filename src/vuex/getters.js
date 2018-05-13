@@ -39,3 +39,10 @@ export const userAddressList = state => {
     }
     return state.userInfo.addressList
 }
+
+export const userSelectAddress = state => {
+    if(!state.userInfo.selectAddress){
+        return storageUtils.getSessionStorage('userSelectAddress');
+    }
+    return state.userInfo.selectAddress
+}
