@@ -2,12 +2,12 @@
 	<div class="user-address-component">
 		<ul class="login-in" v-if="userAddressList.length > 0">
 			<li v-for="item in userAddressList" :key="item.id">
-				<router-link tag="i" class="iconfont" :to="{path: 'addAndEditAddress'}" v-if="isShowEdit">
+				<router-link tag="i" class="iconfont" :to="{path: 'addAndEditAddress',query: {userInfo: JSON.stringify(item)}}" v-if="isShowEdit">
 					&#xe61c;
 				</router-link>
 				<div class="container">
-					<div class="street">{{item.street}}</div>
-					<div class="address">{{item.formattedAddress}}</div>
+					<div class="street">{{item.address.addressComponent.street}}</div>
+					<div class="address">{{item.address.formattedAddress}}</div>
 					<div class="user-info">
 						<span>{{item.userName}}</span><i>{{item.phone}}</i>
 					</div>
@@ -36,6 +36,9 @@ export default{
     },
 	methods:{
 		
+	},
+	mounted () {
+		console.log(this.userAddressList)
 	}
 	
 }

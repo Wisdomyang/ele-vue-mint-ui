@@ -3,7 +3,7 @@
 		<section class="header">
 			<router-link tag="div" :to="{path: 'chooseAddress'}">
 				<i class="iconfont">&#xe61e;</i>
-				<span>{{`${this.positionResult? this.positionResult.addressComponent.street: ''}${this.positionResult? this.positionResult.addressComponent.streetNumber: ''}`}}</span>
+				<span>{{`${this.userSelectAddress? this.userSelectAddress.addressComponent.street: ''}${this.userSelectAddress? this.userSelectAddress.addressComponent.streetNumber: ''}`}}</span>
 			</router-link>
 		</section>
 		<mt-swipe class="home_swiper" :auto="0">
@@ -69,7 +69,8 @@ export default {
 	},
 	computed: {
 		...mapGetters({
-			positionResult: 'positionResult'
+			userSelectAddress: 'userSelectAddress',
+
 		})  
 	},
 	methods: {

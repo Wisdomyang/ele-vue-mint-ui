@@ -6,10 +6,6 @@
       定位中。。
     </section>
 
-    <!-- 定位失败 会出现手动定位和重新定位 positionAgian-->
-		<section class="fail_position" v-if="positionStatus === 'fail'">
-			定位失败。。 请手动定位。 
-		</section>
 		<!-- 定位成功 -->
     <section class="success_position">
       <transition :name="routerTrans">
@@ -30,7 +26,7 @@
 </template>
 
 <script>
-import { Toast,Indicator } from 'mint-ui';
+import { Toast,Indicator,MessageBox } from 'mint-ui';
 import { appUtils } from './common/utils/appUtils';
 import {mapActions,mapGetters} from 'vuex';
 import { AMapService } from './common/class/amap';
@@ -59,7 +55,7 @@ export default {
         id: 3,
         icon: '&#xe60e;'
       }],
-      aMapService: new AMapService(window.app_map,window.app_geolocation,window.app_geocoder,window.app_placeSearch,window.app_marker)
+      aMapService: new AMapService(window.app_map,window.app_geolocation,window.app_geocoder,window.app_placeSearch,window.app_marker,window.app_autocomplete)
     }
   },
   computed: {
@@ -72,7 +68,20 @@ export default {
     ...mapActions([
       'setPositionResult',
       'setPositionStatus'
-		]),
+    ]),
+    // 重新定位
+		position(){
+			this.$store.dispatch('setPositionStatus','positioning');
+			this.aMapService.getCurrentPosition().then(res => {
+        this.$store.dispatch('setPositionStatus','success');
+        this.$store.dispatch('setPositionResult',res);
+				this.aMapService.placeSearch && this.aMapService.placeSearch.setCity(res.addressComponent.citycode);
+			}).catch(err => {
+				console.log(err);
+				this.$store.dispatch('setPositionStatus','fail');
+				Toast('定位失败');
+			})
+		},
     tabSelected(item){
       item.path && this.$router.push(item.path)
     },
@@ -82,6 +91,23 @@ export default {
   },
 
   watch: {
+    positionStatus(newV){
+      if(newV === 'fail'){
+        let msg = MessageBox({
+          title: '提示',
+          message: '定位请求失败，请您开启定位服务以允许外卖获取您的定位信息?',
+          showCancelButton: true,
+          cancelButtonText: '手动选择',
+          confirmButtonText: '重新定位'
+        });
+
+        msg.then(res => {
+          if(res === 'confirm'){
+            this.position();
+          }
+        })
+      }
+    },
     $route(to,from){
       this.title = to.meta.title;
       document.title = to.meta.title;
@@ -100,20 +126,17 @@ export default {
     }
   },
   mounted () {
+    // 高德地图插件必须全部引入成功才行。保证后续逻辑的进行;
     this.aMapService.create('appAmap').then(map => {
-      this.aMapService.rePosition().then(g => {
-          this.$store.dispatch('setPositionStatus','positioning');
-          this.aMapService.getCurrentPosition().then(res => {
-              this.$store.dispatch('setPositionStatus','success');
-              this.$store.dispatch('setPositionResult',res);
-              this.aMapService.rePlaceSearch(res.addressComponent.citycode);
-          }).catch(err => {
-              this.$store.dispatch('setPositionStatus','fail');
-              this.aMapService.map.setZoomAndCenter(18,[116.396749,39.918055]);
-              Toast('定位失败');
-          })
-      });
-        
+      Promise.all([this.aMapService.rePosition(),this.aMapService.reGeocoder(),this.aMapService.rePlaceSearch(null),this.aMapService.reAutocomplete()]).then(res => {
+        this.position();
+      }).catch(err => {
+        console.log(err);
+        Toast('高德地图插件引入失败，会影响后续功能，请刷新重试');
+      })
+    }).catch(err => {
+      console.log(err);
+      Toast('高德地图引入失败，请刷新重试');
     });
   }
 }
