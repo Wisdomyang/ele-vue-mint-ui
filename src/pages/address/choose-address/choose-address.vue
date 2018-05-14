@@ -1,7 +1,7 @@
 <template>
 	<div class="choose-address">
 		<mt-header :title="title">
-			<i class="iconfont" style="color: #fff" slot="left" @click="goback()">&#xe682;</i>
+			<i class="iconfont" style="color: #fff" slot="left" @click="goBack()">&#xe682;</i>
 			<router-link tag="span" :to="{path: 'userAddress'}" style="color: #fff;font-size: 16px" slot="right">
 				地址管理
 			</router-link>
@@ -117,7 +117,7 @@ export default {
 				this.$router.push({name: 'home'});
 			})
 		},
-		goback(){
+		goBack(){
 			appUtils.goBack();
 		}
 	},

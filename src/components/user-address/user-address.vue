@@ -1,10 +1,8 @@
 <template>
 	<div class="user-address-component">
 		<ul class="login-in" v-if="userAddressList.length > 0">
-			<li v-for="item in userAddressList" :key="item.id">
-				<router-link tag="i" class="iconfont" :to="{path: 'addAndEditAddress',query: {userInfo: JSON.stringify(item)}}" v-if="isShowEdit">
-					&#xe61c;
-				</router-link>
+			<li v-for="item in userAddressList" :key="item.id" @click="selectAddress(item)">
+				<i class="iconfont" v-if="isShowEdit">&#xe61c;</i>
 				<div class="container">
 					<div class="street">{{item.address.addressComponent.street}}</div>
 					<div class="address">{{item.address.formattedAddress}}</div>
@@ -35,7 +33,18 @@ export default{
 		})  
     },
 	methods:{
-		
+		...mapActions([
+            'setUserSelectAddress'
+		]),
+		selectAddress(item){
+			if(this.isShowEdit){
+				this.$router.push({name: 'addAndEditAddress',query: {userInfo: JSON.stringify(item)}});
+				return;
+			}else{
+				this.$store.dispatch('setUserSelectAddress',item.address);
+				this.$router.push('home');
+			}
+		}
 	},
 	mounted () {
 		console.log(this.userAddressList)

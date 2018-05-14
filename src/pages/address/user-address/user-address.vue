@@ -1,7 +1,7 @@
 <template>
 	<div class="user-address">
 		<mt-header :title="title">
-			<i class="iconfont" style="color: #fff" slot="left" @click="goback()">&#xe682;</i>
+			<i class="iconfont" style="color: #fff" slot="left" @click="goBack()">&#xe682;</i>
 			<router-link tag="span" :to="{path: 'addAndEditAddress'}" style="color: #fff;font-size: 16px" slot="right">
 				新增地址
 			</router-link>
@@ -27,7 +27,7 @@ export default {
 		userAddress	
 	},
 	methods: {
-		goback(){
+		goBack(){
 			appUtils.goBack();
 		}
 	},

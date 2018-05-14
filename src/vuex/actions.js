@@ -27,6 +27,11 @@ export const setUserAddressList = ({ commit },result) => {
     commit(types.SET_USERADDRESSLIST,{result})
 }
 
+export const deleteUserAddressList = ({ commit },result) => {
+    commit(types.DELETE_USERADDRESSLIST,{result})
+}
+
 export const setUserSelectAddress = ({ commit },result) => {
     commit(types.SET_USERSELECTADDRESS,{result})
 }
+

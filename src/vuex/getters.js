@@ -1,4 +1,5 @@
 import { storageUtils } from '../common/utils/storageUtils'
+import { cookieUtils } from '../common/utils/cookieUtils'
 // position
 export const positionResult = state => {
     if(!state.position.result){
@@ -23,19 +24,19 @@ export const positionSearchNearBy = state => {
 
 export const userName = state => {
     if(!state.userInfo.name){
-        return storageUtils.getSessionStorage('userName');
+        return cookieUtils.getCookie('userName');
     }
     return state.userInfo.name;
 }
 export const userPhone = state => {
     if(!state.userInfo.phone){
-        return  storageUtils.getSessionStorage('userPhone');
+        return cookieUtils.getCookie('userPhone');
     }
     return state.userInfo.phone;
 }
 export const userAddressList = state => {
     if(state.userInfo.addressList.length == 0){
-        return storageUtils.getSessionStorage('userAddressList')? storageUtils.getSessionStorage('userAddressList'): [];
+        return cookieUtils.getCookie('userAddressList')? cookieUtils.getCookie('userAddressList'): [];
     }
     return state.userInfo.addressList
 }
