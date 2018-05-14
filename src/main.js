@@ -6,7 +6,8 @@ import MintUI from 'mint-ui'
 import VueRouter from 'vue-router'
 import axios from "axios"
 import Vuex from 'vuex'
-import VeeValidate from 'vee-validate'
+import VeeValidate, { Validator } from 'vee-validate'
+import zh_CN from 'vee-validate/dist/locale/zh_CN';
 import store from './vuex/index';
 import {routes} from './router/routerConfig'
 import { storageUtils } from './common/utils/storageUtils'
@@ -18,11 +19,13 @@ import './config/rem'
 Vue.config.productionTip = false
 Vue.use(MintUI)
 Vue.use(VueRouter)
+Validator.localize('zh_CN', zh_CN);
 const veeValidateConfig = {
-	delay: 0,
-	// locale: 'zh_CN',
-	messages: null,
-	strict: true
+	errorBagName: 'errors', // change if property conflicts.
+    delay: 0,
+    locale: 'zh_CN',
+    messages: null,
+    strict: true
 };
 Vue.use(VeeValidate,veeValidateConfig);
 /* eslint-disable no-new */

@@ -3,7 +3,8 @@
 		<section class="form">
 			<div class="field">
 				<label for="userName">联系人</label>
-				<mt-field class="input" placeholder="姓名" v-model="userInfo.userName" id="userName" name="userName" v-validate="{rules: { required: true, regex : /^[\u4e00-\u9fa5\w+$]{1,10}/,max:10,min:1}}"></mt-field>
+				<mt-field class="input" placeholder="姓名" :state="errors.has('userName') ? 'error' : 'success'" v-model="userInfo.userName" id="userName" name="userName" v-validate="{rules: { required: true, regex : /^[\u4e00-\u9fa5\w+$]{1,10}/}}" :attr="{ maxlength: 10 }">
+				</mt-field>
 			</div>
 			<div class="field">
 				<label></label>
@@ -13,7 +14,7 @@
 			</div>
 			<div class="field">
 				<label for="phone">电话</label>
-				<mt-field class="input" placeholder="手机号码" v-model="userInfo.phone" id="phone" name="phone" v-validate="{rules: { required: true, regex : /^[1][34578][0-9]{9}$/,max:11}}"></mt-field>
+				<mt-field class="input" placeholder="手机号码" v-model="userInfo.phone" id="phone" name="phone" v-validate="{rules: { required: true, regex : /^[1][34578][0-9]{9}$/}}" :state="errors.has('phone') ? 'error' : 'success'" :attr="{ maxlength: 11 }"></mt-field>
 			</div>
 			<div class="field">
 				<label for="formattedAddress">地址</label>
