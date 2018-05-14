@@ -1,7 +1,7 @@
 <template>
 	<div class="confirm-address">
 		<mt-header :title="title" fixed>
-			<i class="iconfont" style="color: #fff" slot="left" @click="goback()">&#xe682;</i>
+			<i class="iconfont" style="color: #fff" slot="left" @click="goBack()">&#xe682;</i>
 			<router-link tag="i" :to="{path: 'searchAddress',query: {userInfo: JSON.stringify(this.userInfo)}}" class="iconfont" style="color: #fff" slot="right">
 				&#xe612;
 			</router-link>
@@ -56,7 +56,7 @@ export default {
 		confirm(){
 			this.$router.push({name: 'addAndEditAddress',query: {userInfo: JSON.stringify(this.userInfo)}})
 		},
-		goback(){
+		goBack(){
 			appUtils.goBack();
 		}
 	},

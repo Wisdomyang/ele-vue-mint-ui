@@ -168,3 +168,42 @@
         @include sc(.24rem,$light-black);
     }
 }
+
+.user_address{
+    width: 6.46rem;
+    background-color: #F5F5F5;
+    .content{
+        padding: .5rem .42rem 0;
+        margin-bottom: .18rem;
+        background-color: #fff;
+        .title{
+            display: flex;
+            justify-content: space-between;
+            font-size: .36rem;
+            font-weight: bold;
+            padding-bottom: .24rem;
+        }
+        .address_list{
+            li{
+                height: 1.12rem;
+                line-height: 1.12rem;
+                font-size: .32rem;
+                color: $blue;
+                border-bottom: 1px solid $bc;
+                &:last-of-type{
+                    border-bottom: none;
+                }
+            }
+        }
+    }
+    .other_address{
+        padding: 0 .42rem;
+        background-color: #fff;
+        height: 1.3rem;
+        display: flex;
+        justify-content: space-between;
+        font-size: .32rem;
+        align-items: center;
+        color: $light-gray;
+    }
+}

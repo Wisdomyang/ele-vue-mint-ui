@@ -72,7 +72,7 @@ export const routes = [
 		meta: {
 			path: 'addAndEditAddress',
 			title:'新增地址',
-			hasHeader: true,
+			hasHeader: false,
 			hasTabbar: false
 		}
 	},

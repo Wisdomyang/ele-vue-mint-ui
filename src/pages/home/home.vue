@@ -52,6 +52,26 @@
 				</li>
 			</ul>
 		</section>
+
+		<mt-popup v-model="popupVisible" :closeOnClickModal="false" v-if="!userSelectAddress && userAddressList.length > 0">
+			<div class="user_address">
+				<div class="content">
+					<div class="title">
+						<span>请选择收货地址</span>
+						<i class="iconfont icon-guanbi" @click="closeModal()"></i>
+					</div>
+					<ul class="address_list">
+						<li v-for="item in userAddressList" :key="item.id" @click="selectAddress(item)">
+							{{item.address.addressComponent.street}}
+						</li>
+					</ul>
+				</div>
+				<div class="other_address">
+					<span>其他地址</span>
+					<i class="iconfont icon-qianjin" @click="goPage()"></i>
+				</div>
+			</div>
+		</mt-popup>
 	</div>
 </template>
 
@@ -64,26 +84,47 @@ export default {
 	data () {
 		return {
 			title: '',
-			categoryList: []
+			categoryList: [],
+			popupVisible: true
 		}
 	},
 	computed: {
 		...mapGetters({
 			userSelectAddress: 'userSelectAddress',
-
+			userAddressList: 'userAddressList',
+			positionResult: 'positionResult'
 		})  
 	},
 	methods: {
+		...mapActions([
+            'setUserSelectAddress'
+		]),
 		getCategoryList(){
-			
 			homeService.getCategoryList().then(res => {
 				this.categoryList = res.data.swiperItem;
 			});
+		},
+		selectAddress(item){
+			this.$store.dispatch('setUserSelectAddress',item.address);
+			this.popupVisible = false;
+		},
+		closeModal(){
+			if(this.positionResult){
+				this.$store.dispatch('setUserSelectAddress',this.positionResult);
+			}else{
+				if(this.userAddressList.length > 0){
+					this.$store.dispatch('setUserSelectAddress',this.userAddressList[0].address);
+				}
+			}
+			this.popupVisible = false;
+		},
+		goPage(){
+			this.$router.push('chooseAddress');
 		}
 	},
 	created () {
 		this.getCategoryList();
-	} 
+	}
 }
 </script>
 

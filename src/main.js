@@ -10,7 +10,7 @@ import VeeValidate, { Validator } from 'vee-validate'
 import zh_CN from 'vee-validate/dist/locale/zh_CN';
 import store from './vuex/index';
 import {routes} from './router/routerConfig'
-import { storageUtils } from './common/utils/storageUtils'
+import { cookieUtils } from './common/utils/cookieUtils'
 import './assets/css/common'
 import './assets/css/style'
 import './assets/css/animate'
@@ -46,11 +46,10 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to,from,next) => {
-	if(to.meta.auth && !storageUtils.getSessionStorage('userName') && !storageUtils.getSessionStorage('userPhone')){
+	if(to.meta.auth && !cookieUtils.getCookie('userName') && !cookieUtils.getCookie('userPhone')){
 		next({path:'/login'});
 		return;
 	}
-	
 	next();
 })
 const app = new Vue({

@@ -1,13 +1,13 @@
 <template>
 	<div class="position-search">
-		<i class="iconfont icon-fanhui" @click="goback()" v-if="isShowBack"></i>
+		<i class="iconfont icon-fanhui" @click="goBack()" v-if="isShowBack"></i>
 		<mt-search :class="{search_height: !isShowCell}" v-model="value" placeholder="请输入地址" :cancel-text="canceText" :show="showCell">
 			<mt-cell v-if="showCell && address" @click.native="goPage()">
 				<div class="content">
 					<i class="iconfont icon-dingwei"></i>
 					<div>
-						<p>{{address.addressComponent.building}}</p>
-						<p class="ellipsis">{{`${address.addressComponent.street}${address.addressComponent.township}${address.addressComponent.neighborhood}${address.addressComponent.streetNumber}`}}</p>
+						<p>{{`${address.addressComponent.street}${address.addressComponent.streetNumber}`}}</p>
+						<p class="ellipsis">{{address.formattedAddress}}</p>
 					</div>
 				</div>
 			</mt-cell>
@@ -119,9 +119,8 @@ export default{
 						this.userInfo.address = {
 							position: item.location,
 							addressComponent: res.regeocode.addressComponent,
-							formattedAddress: item.address
+							formattedAddress: res.regeocode.formattedAddress
 						} 
-						this.userInfo.address.addressComponent.street = item.address;
 						this.$router.push({name: 'confirmAddress',query: {userInfo: JSON.stringify(this.userInfo)}})
 					})
 					
@@ -143,7 +142,7 @@ export default{
 				}
 			}
 		},
-		goback(){
+		goBack(){
 			appUtils.goBack();
 		}
 	},

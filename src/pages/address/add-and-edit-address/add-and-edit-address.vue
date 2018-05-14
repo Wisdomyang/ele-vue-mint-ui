@@ -1,9 +1,13 @@
 <template>
 	<div class="add-and-edit-address">
+		<mt-header :title="title">
+			<i class="iconfont" style="color: #fff" slot="left" @click="goBack()">&#xe682;</i>
+			<i class="iconfont icon-shanchu" style="color: #fff" slot="right" v-if="userInfo.id" @click="deleteUserInfo()"></i>
+		</mt-header>
 		<section class="form">
 			<div class="field">
 				<label for="userName">联系人</label>
-				<mt-field class="input" placeholder="姓名" :state="errors.has('userName') ? 'error' : 'success'" v-model="userInfo.userName" id="userName" name="userName" v-validate="{rules: { required: true, regex : /^[\u4e00-\u9fa5\w+$]{1,10}/}}" :attr="{ maxlength: 10 }">
+				<mt-field class="input" placeholder="姓名" :state="errors.has('userName') ? 'error' : 'success'" v-model="userInfo.userName" id="userName" name="userName" v-validate="{rules: { required: true, regex : /^[\u4e00-\u9fa5\w$]{1,10}/}}" :attr="{ maxlength: 10 }">
 				</mt-field>
 			</div>
 			<div class="field">
@@ -36,7 +40,7 @@
 </template>
 
 <script>
-import { Toast,Indicator } from 'mint-ui';
+import { Toast,Indicator,MessageBox } from 'mint-ui';
 import stRadio from '../../../components/radio/radio';
 import { mapGetters,mapActions } from 'vuex';
 import { appUtils } from '../../../common/utils/appUtils';
@@ -73,18 +77,31 @@ export default {
 				value: 3,
 				label: '学校'
 			}],
+			title: '新增地址'
 		}
 	},
 	components: {
 		stRadio
 	},
-	computed: {
-		
-	},
 	methods: {
 		...mapActions([
 			'setUserAddressList',
+			'deleteUserAddressList'
 		]),
+		deleteUserInfo(){
+			let msg = MessageBox({
+				title: '删除地址',
+				message: '确定删除该收货地址?',
+				showCancelButton: true
+			});
+
+			msg.then(res => {
+				if(res === 'confirm'){
+					this.$store.dispatch('deleteUserAddressList',this.userInfo.id);
+					this.goBack();
+				}
+			})
+		},
 		save(){
 			if(!this.userInfo.id){
 				this.userInfo.id = appUtils.getUniqueId();
@@ -94,12 +111,16 @@ export default {
 		},
 		goPage(){
 			this.$router.push({name: 'confirmAddress',query: {userInfo: JSON.stringify(this.userInfo)}})
+		},
+		goBack(){
+			appUtils.goBack();
 		}
 	},
 	mounted (){
 		if(this.$route.query.userInfo){
 			this.userInfo =  JSON.parse(this.$route.query.userInfo);
 			this.formattedAddress = this.userInfo.address.formattedAddress;
+			this.userInfo.id && (this.title = '编辑地址');
 		}
 	}
 }

@@ -3,7 +3,7 @@
     <div id="appAmap" v-show="$route.meta.path === 'confirmAddress'? true : false" style="width: 100%;height: 100%;position: absolute;top: 0;left: 0;z-index: 1"></div>
     <!-- 定位中的动画 -->
     <section class="positioning" v-if="positionStatus === 'positioning' && $route.meta.path === 'home'">
-      定位中。。
+      <i class="iconfont icon-dingwei position_animation"></i>
     </section>
 
 		<!-- 定位成功 -->
@@ -12,7 +12,7 @@
         <router-view class="child-view" :class="{no_header: !$route.meta.hasHeader,no_tabbar: !$route.meta.hasTabbar}"></router-view>
       </transition>
       <mt-header :title="title" fixed v-show="$route.meta.hasHeader">
-        <i class="iconfont" style="color: #fff" slot="left" @click="goback()">&#xe682;</i>
+        <i class="iconfont" style="color: #fff" slot="left" @click="goBack()">&#xe682;</i>
       </mt-header>
       <mt-tabbar v-model="tabbarSelected" fixed v-show="$route.meta.hasTabbar">
         <mt-tab-item :id="item.id" v-for="item in tabs" :key="item.id">
@@ -61,13 +61,16 @@ export default {
   computed: {
     ...mapGetters({
       positionResult: 'positionResult',
-      positionStatus: 'positionStatus'
+      positionStatus: 'positionStatus',
+      userSelectAddress: 'userSelectAddress',
+      userAddressList: 'userAddressList'
 		})  
   },
   methods: {
     ...mapActions([
       'setPositionResult',
-      'setPositionStatus'
+      'setPositionStatus',
+      'setUserSelectAddress'
     ]),
     // 重新定位
 		position(){
@@ -75,7 +78,10 @@ export default {
 			this.aMapService.getCurrentPosition().then(res => {
         this.$store.dispatch('setPositionStatus','success');
         this.$store.dispatch('setPositionResult',res);
-				this.aMapService.placeSearch && this.aMapService.placeSearch.setCity(res.addressComponent.citycode);
+        this.aMapService.placeSearch && this.aMapService.placeSearch.setCity(res.addressComponent.citycode);
+        if(!this.userSelectAddress && this.userAddressList.length == 0){
+          this.$store.dispatch('setUserSelectAddress',res);
+        }
 			}).catch(err => {
 				console.log(err);
 				this.$store.dispatch('setPositionStatus','fail');
@@ -85,7 +91,7 @@ export default {
     tabSelected(item){
       item.path && this.$router.push(item.path)
     },
-    goback(){
+    goBack(){
       appUtils.goBack();
     }
   },
@@ -183,14 +189,48 @@ export default {
     box-shadow: none;
   }
 
-  .fail_position,.success_position,.positioning{
+  .success_position{
     height: 100%;
+  }
+
+  .positioning{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 2;
+    background-color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    i{
+      color: red; 
+      font-size: 0.7rem;
+    }
+    
   }
   .amap-logo,.amap-copyright{
     display: none !important;
   }
 }
 
+.position_animation{
+  animation: bound 1s infinite;
+}
+
+@keyframes bound {
+  0%{
+    transform: translate3d(0,0,0);
+  }
+  50%{
+    transform: translate3d(0,-20px,0);
+  }
+  
+  100%{
+    transform: translate3d(0,0,0);
+  }
+}
 
 .child-view {
   width:100%;
