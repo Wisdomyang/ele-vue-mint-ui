@@ -7,13 +7,13 @@
 			</router-link>
 		</section>
 		<mt-swipe class="home_swiper" :auto="0">
-			<mt-swipe-item v-for="category in categoryList">
-				<div class="category_container" v-for="item in category.goodList" :key="item.id">
+			<mt-swipe-item v-for="item in foodTypes">
+				<div class="category_container" v-for="foodType in item" :key="foodType.id">
 					<div class="img_box">
-						<img :src="item.images" :alt="item.name">
+						<img :src="`${config.service.imgBaseUrl}${foodType.image_url}`" :alt="foodType.title">
 					</div>
 					<div class="text">
-						{{item.name}}
+						{{foodType.title}}
 					</div>
 				</div>
 			</mt-swipe-item>
@@ -78,14 +78,16 @@
 <script>
 import { Toast,Indicator } from 'mint-ui';
 import { homeService } from './home.service';
-import {data} from "../../mock";
 import {mapActions,mapGetters} from 'vuex';
+import { appUtils } from '../../common/utils/appUtils';
+import { config } from '../../config/config';
 export default {
 	data () {
 		return {
 			title: '',
-			categoryList: [],
-			popupVisible: true
+			foodTypes: [],
+			popupVisible: true,
+			config: config
 		}
 	},
 	computed: {
@@ -99,10 +101,21 @@ export default {
 		...mapActions([
             'setUserSelectAddress'
 		]),
-		getCategoryList(){
-			homeService.getCategoryList().then(res => {
-				this.categoryList = res.data.swiperItem;
-			});
+		getFoodTypeList(){
+			Indicator.open('加载中...');
+			homeService.getFoodTypeList().then(res => {
+				Indicator.close();
+				let resLength = res.length;
+				let resArr = [...res]; // 返回一个新的数组
+				let foodArr = [];
+				for (let i = 0, j = 0; i < resLength; i += 8, j++) {
+					foodArr[j] = resArr.splice(0, 8);
+				}
+				this.foodTypes = foodArr;
+			}).catch(err => {
+				Indicator.close();
+				Toast('网络连接失败');
+			})
 		},
 		selectAddress(item){
 			this.$store.dispatch('setUserSelectAddress',item.address);
@@ -123,7 +136,7 @@ export default {
 		}
 	},
 	created () {
-		this.getCategoryList();
+		this.getFoodTypeList();
 	}
 }
 </script>

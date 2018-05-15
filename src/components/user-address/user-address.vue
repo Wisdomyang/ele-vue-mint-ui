@@ -45,9 +45,6 @@ export default{
 				this.$router.push('home');
 			}
 		}
-	},
-	mounted () {
-		console.log(this.userAddressList)
 	}
 	
 }

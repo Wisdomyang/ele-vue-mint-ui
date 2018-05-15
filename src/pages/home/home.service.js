@@ -1,7 +1,13 @@
 import { ajax } from '../../common/utils/ajax';
-
+import { config } from '../../config/config';
 export const homeService = {
-    getCategoryList: () => {
+    getFoodTypeList(){
+        let url = `${config.service.commonService}/v2/index_entry`;
+        return ajax.get(url);
+    },
+
+
+    getCategoryList(){
         return ajax.get('swiperList');
     }
 }
