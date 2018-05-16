@@ -1,7 +1,7 @@
 <template>
 	<div class="position-search">
 		<i class="iconfont icon-fanhui" @click="goBack()" v-if="isShowBack"></i>
-		<mt-search :class="{search_height: !isShowCell}" v-model="value" placeholder="请输入地址" :cancel-text="canceText" :show="showCell">
+		<mt-search :class="{search_height: !isShowCell}" v-model="value" placeholder="请输入地址" :cancel-text="canceText" :show="showCell" @input.native="change($event)" @propertychange.native="change($event)">
 			<mt-cell v-if="showCell && address" @click.native="goPage()">
 				<div class="content">
 					<i class="iconfont icon-dingwei"></i>
@@ -51,54 +51,6 @@ export default{
 		}
 	},
 	props:['isShowCell','isShowBack'],
-	watch: {
-		value(newV){
-			if(newV === ''){
-				this.address && this.aMapService.getSearchNearBy(newV,this.address.position,50000).then(res => {
-					this.$store.dispatch('setPositionSearchNearBy',res.poiList.pois);
-					this.searchResult = res.poiList.pois;
-				}).catch(err => {
-					console.log(err);
-					Toast('获取附近地址失败');
-				})
-			}else{
-				this.aMapService.getAutocompleteSearch(newV).then(res => {
-					this.searchResult = [];
-					for(let item of res.tips){
-						if(item.location){
-							if(item.address instanceof Array){
-								if(item.address.length > 0){
-									this.searchResult.push({
-										name: item.name,
-										address: `${item.district}${item.address[0]}`,
-										location: item.location
-									})
-								}else{
-									this.searchResult.push({
-										name: item.name,
-										address: `${item.district}`,
-										location: item.location
-									})
-								}
-							}
-							if(typeof (item.address) == 'string'){
-								this.searchResult.push({
-									name: item.name,
-									address: `${item.district}${item.address}`,
-									location: item.location
-								})
-							}
-						}
-						
-					}
-				}).catch(err => {
-					console.log(err);
-					Toast('搜索无结果');
-					this.searchResult = [];
-				})
-			}
-		}
-	},
 	computed: {
 		...mapGetters({
 			positionResult: 'positionResult',
@@ -110,6 +62,58 @@ export default{
 			'setPositionSearchNearBy',
 			'setUserSelectAddress'
 		]),
+		change(e){
+			let targetValue = e.target ? e.target.value : e.srcElement.value;
+			if(targetValue === ''){
+				this.address && this.aMapService.getSearchNearBy(targetValue,this.address.position,50000).then(res => {
+					this.$store.dispatch('setPositionSearchNearBy',res.poiList.pois);
+					this.searchResult = res.poiList.pois;
+				}).catch(err => {
+					console.log(err);
+					Toast('获取附近地址失败');
+				})
+			}else{
+				this.getAutocompleteSearch(targetValue);
+			}
+		},
+
+		// 去抖动函数
+		getAutocompleteSearch: _.debounce(function(param){
+			this.aMapService.getAutocompleteSearch(param).then(res => {
+				this.searchResult = [];
+				for(let item of res.tips){
+					if(item.location){
+						if(item.address instanceof Array){
+							if(item.address.length > 0){
+								this.searchResult.push({
+									name: item.name,
+									address: `${item.district}${item.address[0]}`,
+									location: item.location
+								})
+							}else{
+								this.searchResult.push({
+									name: item.name,
+									address: `${item.district}`,
+									location: item.location
+								})
+							}
+						}
+						if(typeof (item.address) == 'string'){
+							this.searchResult.push({
+								name: item.name,
+								address: `${item.district}${item.address}`,
+								location: item.location
+							})
+						}
+					}
+					
+				}
+			}).catch(err => {
+				console.log(err);
+				Toast('搜索无结果');
+				this.searchResult = [];
+			})
+		},1000),
 		goPage(item){
 			if(this.$route.query.userInfo){
 				if(!item){
