@@ -113,7 +113,7 @@ export default{
 				Toast('搜索无结果');
 				this.searchResult = [];
 			})
-		},1000),
+		},500),
 		goPage(item){
 			if(this.$route.query.userInfo){
 				if(!item){
@@ -237,6 +237,7 @@ export default{
 		height: 100%;
 		text-align: center;
 		color: $blue;
+		font-size: 20px;
 	}
 	div{
 		width: 87.2%;

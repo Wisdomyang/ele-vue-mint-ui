@@ -27,7 +27,7 @@ export default{
 		}
 	},
 	props:['isShowEdit'],
-	 computed: {
+	computed: {
         ...mapGetters({
 			userAddressList: 'userAddressList'
 		})  

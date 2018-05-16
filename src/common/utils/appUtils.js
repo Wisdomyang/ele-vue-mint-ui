@@ -8,8 +8,7 @@ export const appUtils = {
 	            n[i] = this.deepCopy(o[i]);
 	        }
 	        return n;
-
-	    }else if(o instanceof Function){
+	    }else if(o instanceof Function || o instanceof RegExp){
             return o;
         } else if (o instanceof Object) {
 	        var n = {}

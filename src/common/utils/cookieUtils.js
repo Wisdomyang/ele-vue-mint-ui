@@ -10,7 +10,7 @@ export const cookieUtils = {
 		}
 	},
     getCookie(key){
-		var arr,reg = new RegExp("(^| )"+ key +"=([^;]*)(;|$)");
+		var arr,reg = new RegExp("(^| )"+ key + "=([^;]*)(;|$)");
 		if(arr = document.cookie.match(reg)){
 			return this.transJson(unescape(arr[2]));
 		}else{

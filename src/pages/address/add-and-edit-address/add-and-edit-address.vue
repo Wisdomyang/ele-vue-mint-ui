@@ -34,7 +34,7 @@
 			</div>
 		</section>
 		<div class="save">
-			<mt-button class="btn" :disabled="errors.has('phone') || errors.has('userName') || !userInfo.phone || !userInfo.userName || !userInfo.address || !userInfo.gender" @click="save()">保存</mt-button>
+			<mt-button class="btn" :disabled="isDisabledOfSave" @click="save()">保存</mt-button>
 		</div>
 	</div>
 </template>
@@ -82,6 +82,15 @@ export default {
 	},
 	components: {
 		stRadio
+	},
+	computed: {
+		isDisabledOfSave(){
+			if(this.errors.has('phone') || this.errors.has('userName') || !this.userInfo.phone || !this.userInfo.userName || !this.userInfo.address || !this.userInfo.gender){
+				return true;
+			}else{
+				return false;
+			}
+		}
 	},
 	methods: {
 		...mapActions([
