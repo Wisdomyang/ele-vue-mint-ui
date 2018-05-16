@@ -85,7 +85,7 @@ export default {
 	data () {
 		return {
 			title: '',
-			foodTypes: [],
+			resDate: [],
 			popupVisible: true,
 			config: config
 		}
@@ -95,7 +95,15 @@ export default {
 			userSelectAddress: 'userSelectAddress',
 			userAddressList: 'userAddressList',
 			positionResult: 'positionResult'
-		})  
+		}),
+		foodTypes(){
+			const resLength = this.resDate.length;
+			let foodArr = [];
+			for (let i = 0, j = 0; i < resLength; i += 8, j++) {
+				foodArr[j] = this.resDate.splice(0, 8);
+			}
+			return foodArr;
+		}
 	},
 	methods: {
 		...mapActions([
@@ -105,13 +113,7 @@ export default {
 			Indicator.open('加载中...');
 			homeService.getFoodTypeList().then(res => {
 				Indicator.close();
-				let resLength = res.length;
-				let resArr = [...res]; // 返回一个新的数组
-				let foodArr = [];
-				for (let i = 0, j = 0; i < resLength; i += 8, j++) {
-					foodArr[j] = resArr.splice(0, 8);
-				}
-				this.foodTypes = foodArr;
+				this.resDate = res;
 			}).catch(err => {
 				Indicator.close();
 				Toast('网络连接失败');

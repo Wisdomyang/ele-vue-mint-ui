@@ -6,6 +6,7 @@ import MintUI from 'mint-ui'
 import VueRouter from 'vue-router'
 import axios from "axios"
 import Vuex from 'vuex'
+import _ from 'lodash' 
 import VeeValidate, { Validator } from 'vee-validate'
 import zh_CN from 'vee-validate/dist/locale/zh_CN';
 import store from './vuex/index';

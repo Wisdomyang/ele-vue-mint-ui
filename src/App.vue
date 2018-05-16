@@ -85,7 +85,6 @@ export default {
 			}).catch(err => {
 				console.log(err);
 				this.$store.dispatch('setPositionStatus','fail');
-				Toast('定位失败');
 			})
 		},
     tabSelected(item){
@@ -200,7 +199,6 @@ export default {
     left: 0;
     top: 0;
     z-index: 2;
-    background-color: #fff;
     display: flex;
     justify-content: center;
     align-items: center;
