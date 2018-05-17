@@ -11,7 +11,7 @@
 					</div>
 				</div>
 			</mt-cell>
-			<mt-cell v-for="(item,index) in searchResult" v-if="showCell && searchResult.length > 0" @click.native="goPage(item)">
+			<mt-cell v-for="(item,index) in searchResult" v-show="showCell && searchResult.length > 0" @click.native="goPage(item)">
 				<div class="content">
 					<i></i>
 					<div>
@@ -20,7 +20,7 @@
 					</div>
 				</div>
 			</mt-cell>
-			<mt-cell v-if="showCell && searchResult.length == 0">
+			<mt-cell v-show="showCell && searchResult.length == 0">
 				<div class="content">
 					<i></i>
 					<div>
