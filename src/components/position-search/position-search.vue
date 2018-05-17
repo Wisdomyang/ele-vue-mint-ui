@@ -11,7 +11,7 @@
 					</div>
 				</div>
 			</mt-cell>
-			<mt-cell v-for="(item,index) in searchResult" v-if="showCell && searchResult.length > 0" @click.native="goPage(item)">
+			<mt-cell v-for="(item,index) in searchResult" v-show="showCell && searchResult.length > 0" @click.native="goPage(item)">
 				<div class="content">
 					<i></i>
 					<div>
@@ -20,7 +20,7 @@
 					</div>
 				</div>
 			</mt-cell>
-			<mt-cell v-if="showCell && searchResult.length == 0">
+			<mt-cell v-show="showCell && searchResult.length == 0">
 				<div class="content">
 					<i></i>
 					<div>
@@ -113,7 +113,7 @@ export default{
 				Toast('搜索无结果');
 				this.searchResult = [];
 			})
-		},1000),
+		},500),
 		goPage(item){
 			if(this.$route.query.userInfo){
 				if(!item){
@@ -237,6 +237,7 @@ export default{
 		height: 100%;
 		text-align: center;
 		color: $blue;
+		font-size: 20px;
 	}
 	div{
 		width: 87.2%;

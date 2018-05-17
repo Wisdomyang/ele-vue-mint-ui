@@ -10,7 +10,7 @@ import _ from 'lodash'
 import VeeValidate, { Validator } from 'vee-validate'
 import zh_CN from 'vee-validate/dist/locale/zh_CN';
 import store from './vuex/index';
-import {routes} from './router/routerConfig'
+import { routes } from './router/routerConfig'
 import { cookieUtils } from './common/utils/cookieUtils'
 import './assets/css/common'
 import './assets/css/style'

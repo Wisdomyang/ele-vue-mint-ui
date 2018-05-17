@@ -1,15 +1,15 @@
 <template>
   <div id="app">
-    <div id="appAmap" v-show="$route.meta.path === 'confirmAddress'? true : false" style="width: 100%;height: 100%;position: absolute;top: 0;left: 0;z-index: 1"></div>
+    <div id="appAmap" v-show="isAppAmapShow" style="width: 100%;height: 100%;position: absolute;top: 0;left: 0;z-index: 1"></div>
     <!-- 定位中的动画 -->
-    <section class="positioning" v-if="positionStatus === 'positioning' && $route.meta.path === 'home'">
+    <section class="positioning" v-if="isPositionAnimationShow">
       <i class="iconfont icon-dingwei position_animation"></i>
     </section>
 
 		<!-- 定位成功 -->
     <section class="success_position">
       <transition :name="routerTrans">
-        <router-view class="child-view" :class="{no_header: !$route.meta.hasHeader,no_tabbar: !$route.meta.hasTabbar}"></router-view>
+        <router-view class="child-view" :class="routerClass"></router-view>
       </transition>
       <mt-header :title="title" fixed v-show="$route.meta.hasHeader">
         <i class="iconfont" style="color: #fff" slot="left" @click="goBack()">&#xe682;</i>
@@ -64,7 +64,24 @@ export default {
       positionStatus: 'positionStatus',
       userSelectAddress: 'userSelectAddress',
       userAddressList: 'userAddressList'
-		})  
+    }),
+    isAppAmapShow(){
+      return this.$route.meta.path === 'confirmAddress'? true : false
+    },
+    isPositionAnimationShow(){
+      if(this.positionStatus === 'positioning' && this.$route.meta.path === 'home'){
+        return true;
+      }else{
+        return false;
+      }
+    },
+    routerClass(){
+      return {
+        no_header: !this.$route.meta.hasHeader,
+        no_tabbar: !this.$route.meta.hasTabbar
+      }
+    }
+
   },
   methods: {
     ...mapActions([
@@ -94,7 +111,6 @@ export default {
       appUtils.goBack();
     }
   },
-
   watch: {
     positionStatus(newV){
       if(newV === 'fail'){
@@ -222,7 +238,7 @@ export default {
     transform: translate3d(0,0,0);
   }
   50%{
-    transform: translate3d(0,-20px,0);
+    transform: translate3d(0,-0.2rem,0);
   }
   
   100%{

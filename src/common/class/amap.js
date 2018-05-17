@@ -53,6 +53,7 @@ export class AMapService {
                                         //	2: PC上禁止使用浏览器定位
                                         //	3: 所有终端禁止使用浏览器定位
                });
+               
                if(!this.geolocation){
                     reject('err');
                     return;
