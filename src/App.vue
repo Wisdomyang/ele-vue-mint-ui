@@ -138,12 +138,6 @@ export default {
 			}else{
 				this.routerTrans='slide-left';
       }
-
-      // 由于该项目只能从首页进入，所以没必要。
-      // if(to.meta.path != 'confirmAddress'){
-      //   this.positionAgian = !this.positionAgian;
-      // }
-      
     }
   },
   mounted () {

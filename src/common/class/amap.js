@@ -1,19 +1,7 @@
 export class AMapService {
-    map = null;
-    geolocation = null;
-    geocoder = null;
-    placeSearch = null;
-    marker = null;
-    autocomplete = null;
-
+    
     constructor(map,geolocation,geocoder,placeSearch,marker,autocomplete){
-        this.map = map;
-        this.geolocation = geolocation;
-        this.geocoder = geocoder;
-        this.placeSearch = placeSearch;
-        this.marker = marker;
-        this.autocomplete = autocomplete;
-
+        [this.map,this.geolocation,this.geocoder,this.placeSearch,this.marker,this.autocomplete] = [...arguments];
     }
 
     create(mapContainer){
