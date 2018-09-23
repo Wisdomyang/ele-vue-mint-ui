@@ -7,7 +7,7 @@ export const homeService = {
     },
 
 
-    getCategoryList(){
-        return ajax.get('swiperList');
+    getCategoryList(data){
+        return ajax.post('http://192.168.0.101:8080/post', data);
     }
 }
