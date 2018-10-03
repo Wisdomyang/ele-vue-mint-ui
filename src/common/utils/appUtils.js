@@ -20,41 +20,7 @@ export const appUtils = {
     },
     // 精确判断类型
     preciseJudgmentType(val) {
-        switch (Object.prototype.toString.call(val)) {
-            case "[object String]":
-                return 'String';
-                break;
-            case "[object Number]":
-                return 'Number';
-                break;
-            case "[object Boolean]":
-                return 'Boolean';
-                break;
-            case "[object Undefined]":
-                return 'Undefined';
-                break;
-            case "[object Symbol]":
-                return 'Symbol';
-                break;
-            case "[object Object]":
-                return 'Object';
-                break;
-            case "[object Null]":
-                return 'Null';
-                break;
-            case "[object Array]":
-                return 'Array';
-                break;
-            case "[object Date]":
-                return 'Date';
-                break;
-            case "[object RegExp]":
-                return 'RegExp';
-                break;
-            case "[object Function]":
-                return 'Function';
-                break;
-        }
+        return Object.prototype.toString.call(val).match(/^\[object\s(.*)\]$/)[1];
     },
     
     sortByKey(key, param = 'up') {
